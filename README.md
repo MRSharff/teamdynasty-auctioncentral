@@ -4,6 +4,6 @@
  
  
  Team Members:
-	Mat Sharff / MRSharff
- Christopher Stokes
- Shoba Gopi
+	Mat Sharff / MRSharff\n
+ 	Christopher Stokes\n
+ 	Shoba Gopi\n
