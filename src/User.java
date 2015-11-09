@@ -1,5 +1,7 @@
+import java.util.Comparator;
 
-public abstract class User {
+
+public abstract class User implements Comparable<User> {
 	private int myType = 1;
 	private String myUsername;
 	private int ID;
@@ -24,4 +26,5 @@ public abstract class User {
 	public void logIn() {
 		//code to login goes here
 	}
+	
 }

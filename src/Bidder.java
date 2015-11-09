@@ -19,5 +19,10 @@ public class Bidder extends User {
 	public void changeBid() {
 		//code to change bid goes here
 	}
+
+	@Override
+	public int compareTo(User otherUser) {
+		return getUsername().compareTo(otherUser.getUsername());
+	}
 	
 }

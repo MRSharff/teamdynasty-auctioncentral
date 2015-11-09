@@ -13,6 +13,11 @@ public class ACEmployee extends User {
 	public void viewBids() {
 		//code to veiwbids goes here.
 	}
+
+	@Override
+	public int compareTo(User otherUser) {
+		return getUsername().compareTo(otherUser.getUsername());
+	}
 	
 	
 }

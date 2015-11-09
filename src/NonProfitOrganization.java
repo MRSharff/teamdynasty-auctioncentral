@@ -31,5 +31,9 @@ public class NonProfitOrganization extends User {
 		//code to edit inventory goes here
 	}
 	
+	@Override
+	public int compareTo(User otherUser) {
+		return getUsername().compareTo(otherUser.getUsername());
+	}
 	
 }

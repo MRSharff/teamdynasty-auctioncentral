@@ -2,6 +2,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
+import java.util.TreeSet;
 
 
 public class AuctionCentral {
@@ -9,15 +11,18 @@ public class AuctionCentral {
 	private static final String LOGIN_MESSAGE = "Choose an action:\n"
 												+ "[1] Login\n"
 												+ "[2] Create new Account\n"
-												+ "[Q] Quit\n";
+												+ "[3] Quit";
 	private static final String LOGIN_ERROR_MESSAGE = "Unrecognized input, please enter 1 to login, 2 to create new account.";
 	private static final String GET_USERNAME_MESSAGE = "Please enter your Username:";
-	private static final String USER_NOT_FOUND_MESSAGE = "There was no user with that username, enter 1 to try again, 2 to create a new account, or Q to quit.";
+	private static final String USER_NOT_FOUND_MESSAGE = "There was no user with that username,";
 	private static final String NEW_USER_MESSAGE = "Please enter a new Username:";
 	private static final String NEW_USER_SPACE_ERROR = "Usernames cannot contain spaces.";
 	private static final String USERNAME_COPY_ERROR_MESSAGE = "That username already exists, please enter a different username:";
-	private static final String USER_TYPE_PROMPT_MESSAGE = "Enter 1 if you're a non-profit organization or 2 if you're a bidder.";
+	private static final String USER_TYPE_PROMPT_MESSAGE = "Select User Type:\n"
+															+ "[1] Non-Profit Organization\n"
+															+ "[2] Bidder";
 	private static final String LOGIN_SUCCESSFUL_MESSAGE = "You are now logged in as: ";
+	private static final String NEXT_ACTION_MESSAGE = "Choose what action you would like to perform";
 	
 	
 	public static void main(String[] Args) {
@@ -25,165 +30,160 @@ public class AuctionCentral {
 		
 		
 		boolean quitFlag = false;
-		User currentUser;
-		HashSet<User> userList = new HashSet<User>();
+		User currentUser = null;
+		TreeSet<User> userList = new TreeSet<User>();
 		List<Auction> auctionList = new LinkedList<Auction>();
-		int userType = 1;
+		int userType;
 		
 		while (!quitFlag) {
 			//Prompt for login
-			currentUser = logIn(userList);
+			System.out.println(LOGIN_MESSAGE);
+			int option = chooseOption();
+			if (option == 3) {
+				System.exit(0);
+			} else if (option == 1) {
+				while((currentUser = logIn(userList)) == null) {
+					System.out.println(USER_NOT_FOUND_MESSAGE);
+				}
+			} else {
+				while ((currentUser = createNewUser(userList)) == null) {
+					System.out.println(USERNAME_COPY_ERROR_MESSAGE);
+				}
+			}
 			System.out.println(LOGIN_SUCCESSFUL_MESSAGE + currentUser.getUsername());
 			userType = currentUser.getUserType();
+			
+			System.out.println(NEXT_ACTION_MESSAGE);
+			switch (userType) {
+			case 1: //ACEmployee options
+				printACEOptions();
+				option = chooseOption();
+			case 2: //NPO options
+				printNPOOptions();
+				option = chooseOption();
+			case 3: //Bidder Options
+				printBidderOptions();
+				option = chooseOption();
+			}
+			System.out.println("Made it here");
 		}
 		
 	}
 
-	private static User logIn(HashSet<User> theUserList) {
+	private static int chooseOption() {
+		Scanner commandInput = new Scanner(System.in);
+		int returnVal = commandInput.nextInt();
+		commandInput.nextLine();
+		
+		return returnVal;
+	}
+	
+	private static int getUserType() {
+		
+		System.out.println(USER_TYPE_PROMPT_MESSAGE);
 		
 		Scanner commandInput = new Scanner(System.in);
-		String fullInput;
-		int userInput = 3;
-		boolean inputFlag = false;
+		int returnVal = commandInput.nextInt();
 		
-		System.out.println(LOGIN_MESSAGE);
-		while (!inputFlag) { //check for correct input
-			if (commandInput.hasNext()) {
-				fullInput = commandInput.nextLine(); //get the users full input
-				if (fullInput.length() == 1) {
-					if (fullInput.charAt(0) == '1') { //
-						userInput = 1;
-						inputFlag = true;
-					} else if (fullInput.charAt(0) == '2') {
-						userInput = 2;
-						inputFlag = true;
-					} else if (fullInput.charAt(0) == 'Q') {
-						System.exit(0);
-					}
-				} else { //if it is not just 1 or 2, give error message.
-					System.out.println(LOGIN_ERROR_MESSAGE);
-				}
-			}
-		}
+		return returnVal;
+	}
+	
+	private static User createNewUser(TreeSet<User> theUserList) {
+//		String newUser = null;
+//		System.out.println(NEW_USER_MESSAGE);
+//		
+//		
+//		
+//		boolean flag = false;
+//		
+//		
+//		while (!flag) {
+//			boolean found = false;
+//			Scanner commandInput = new Scanner(System.in);
+//			newUser = commandInput.nextLine();
+//			commandInput.close();
+//			for (User theUser : theUserList) {
+//				if (theUser.getUsername().equals(newUser)) {
+//					System.out.println(USERNAME_COPY_ERROR_MESSAGE);
+//					found = true;
+//					break;
+//				}
+//			}
+//			if (!found) {
+//				flag = true;
+//			}
+//		}
+//		
+//		int userType = getUserType();
+//		if (userType == 1) {
+//			return new NonProfitOrganization(newUser);
+//		}
+//		
+//		return new Bidder(newUser);
+		System.out.println(NEW_USER_MESSAGE);
 		
-		//reset correctInput flag for next input
-		inputFlag = false;
-
-			if (userInput == 1) {
-				//if they have a username and want to login do this
-				
-				//print out message
-				System.out.println(GET_USERNAME_MESSAGE);
-				
-				//get the username that the user is trying to login with
-				fullInput = commandInput.nextLine();
-
-				//check the user list for a user with the entered username
-				//return the user if found
-				for (User user: theUserList) {
-					if (user.getUsername().equals(fullInput)) {
-						//close the scanner and return user
-						commandInput.close();
-						return user;
-					}
-				}
-				//if not found, ask to redo or create a new account
-				System.out.println(USER_NOT_FOUND_MESSAGE);
-				boolean aFlag = false;
-				while (!aFlag) { //check for correct input
-					fullInput = commandInput.nextLine(); //get the users full input
-					if (fullInput.length() == 1) {
-						if (fullInput.charAt(0) == '1') { //
-							userInput = 1;
-							aFlag = true;
-						} else if (fullInput.charAt(0) == '2') {
-							userInput = 2;
-							aFlag = true;
-							inputFlag = true;
-						} else if (fullInput.charAt(0) == 'Q') {
-							System.exit(0);
-						}
-					} else { //if it is not just 1 or 2, give error message.
-						System.out.println(LOGIN_ERROR_MESSAGE);
-					}
-				}
-			}
+		Scanner commandInput = new Scanner(System.in);
+		String userName = commandInput.nextLine();
 		
-		if(userInput == 2) {
-			System.out.println(NEW_USER_MESSAGE);
-			
-			boolean aFlag = false;
-			while (!aFlag) { //check for correct input
-				String newUsername;
-				newUsername = commandInput.nextLine(); //get the users full input
-				//check if input has spaces.
-				if (!newUsername.contains(" ")) {
-					//check if already a username
-					boolean nameFound = false;
-					for (User user : theUserList) {
-						if (user.getUsername().equals(newUsername)) {
-							System.out.println(USERNAME_COPY_ERROR_MESSAGE);
-							nameFound = true;
-							break;
-						}
-					}
-					if (!nameFound) {
-						System.out.println(USER_TYPE_PROMPT_MESSAGE);
-						boolean bFlag = false;
-						while (!bFlag) { //check for correct input
-							fullInput = commandInput.nextLine(); //get the users full input
-							if (fullInput.length() == 1) {
-								if (fullInput.charAt(0) == '1') { //
-									userInput = 1;
-									bFlag = true;
-								} else if (fullInput.charAt(0) == '2') {
-									userInput = 2;
-									bFlag = true;
-								} else if (fullInput.charAt(0) == 'Q') {
-									System.exit(0);
-								}
-							} else { //if it is not just 1 or 2, give error message.
-								System.out.println(LOGIN_ERROR_MESSAGE);
-							}
-						}
-						
-						System.out.println(userInput);
-						//create a new user, add it to the user set, and return it to set the current user.
-						if (userInput == 1) {
-							User newUser = new NonProfitOrganization(newUsername);
-							theUserList.add(newUser);
-							//close the scanner and return user
-							commandInput.close();
-							return newUser;
-						} else if (userInput == 2) {
-							User newUser = new Bidder(newUsername);
-							theUserList.add(newUser);
-							//close the scanner and return user
-							commandInput.close();
-							return newUser;
-						}
-					}
-					break;
-				} else {
-					System.out.println(NEW_USER_SPACE_ERROR);
-				}
+		for (User theUser : theUserList) {
+			if (theUser.getUsername().equals(userName)) {
+				return null;
 			}
 		}
 		
 		
+		int userType = getUserType();
+		if (userType == 1) {
+			User newUser = new NonProfitOrganization(userName);
+			theUserList.add(newUser);
+			return newUser;
+		}
 		
-		//close the scanner and return user
-		commandInput.close();
-		return new Bidder("ERROR");
-		
+		User newUser = new Bidder(userName);
+		theUserList.add(newUser);
+		return newUser;
 		
 	}
 	
-	private void loadUserList() {
+	private static User logIn(TreeSet<User> theUserList) {
+		System.out.println(GET_USERNAME_MESSAGE);
+		
+		Scanner commandInput = new Scanner(System.in);
+		String userName = commandInput.nextLine();
+		
+		for (User theUser : theUserList) {
+			if (theUser.getUsername().equals(userName)) {
+				return theUser;
+			}
+		}
+		
+		return null;
+	}
+	
+	private static void printACEOptions() {
+		System.out.println("[1] View Monthly Calendar");
+		System.out.println("[2] View details of auction");
+	}
+	
+	private static void printNPOOptions() {
+		System.out.println("[1] Schedule Auction");
+		System.out.println("[2] Create Auction");
+		System.out.println("[3] Edit Auction");
+		System.out.println("[4] Create New Inventory Item");
+		System.out.println("[5] Edit Inventory Item");
+	}
+	
+	private static void printBidderOptions() {
+		System.out.println("[1] View Available Auctions");
+		System.out.println("[2] Bid on Item");
+		System.out.println("[3] Change Bid");
+	}
+	
+	private static void loadUserList() {
 		//load the userlist with a list of users
 	}
 	
-	private void loadAuctionList() {
+	private static void loadAuctionList() {
 		//loads a list of auctions into the auctionList
 	}
 	
