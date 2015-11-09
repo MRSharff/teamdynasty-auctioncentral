@@ -1,6 +1,13 @@
 
 public class Bidder extends User {
 
+	int myCredit;
+	
+	public Bidder(String theUsername) {
+		super(theUsername, 3);
+		myCredit = 0;
+	}
+
 	public void chooseAuction() {
 		//code to choose auction goes here
 	}

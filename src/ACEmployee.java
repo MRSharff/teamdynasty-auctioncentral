@@ -2,6 +2,10 @@
 public class ACEmployee extends User {
 
 	
+	public ACEmployee(String theUsername) {
+		super(theUsername, 1);
+	}
+
 	public void viewCalendar() {
 		//code to view calendar goes here
 	}

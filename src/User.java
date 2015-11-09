@@ -1,18 +1,24 @@
 
 public abstract class User {
-	private String username;
+	private int myType = 1;
+	private String myUsername;
 	private int ID;
 	
+	public User(final String theUsername, final int userType) {
+		myUsername = theUsername;
+	}
 	
 	public String getUsername() {
-		return username;
+		return myUsername;
 	}
 	
 	public int getID() {
 		return ID;
 	}
 	
-	
+	public int getUserType() {
+		return myType;
+	}
 	
 	
 	public void logIn() {

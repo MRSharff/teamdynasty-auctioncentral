@@ -1,9 +1,15 @@
-import java.util.List;
+import java.util.HashSet;
 
 
 public class NonProfitOrganization extends User {
 	
-	private List<Item> inventory;
+	private HashSet<Item> myInventory;
+	
+	
+	public NonProfitOrganization(String theUsername) {
+		super(theUsername, 2);
+		myInventory = new HashSet<Item>();
+	}
 	
 	public void createAuction() {
 		//code to enter auction info goes here
