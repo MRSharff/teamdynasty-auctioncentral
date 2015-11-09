@@ -6,7 +6,10 @@ import java.util.Scanner;
 
 public class AuctionCentral {
 	
-	private static final String LOGIN_MESSAGE = "Enter 1 to login, 2 to create new account, or Q to quit.";
+	private static final String LOGIN_MESSAGE = "Choose an action:\n"
+												+ "[1] Login\n"
+												+ "[2] Create new Account\n"
+												+ "[Q] Quit\n";
 	private static final String LOGIN_ERROR_MESSAGE = "Unrecognized input, please enter 1 to login, 2 to create new account.";
 	private static final String GET_USERNAME_MESSAGE = "Please enter your Username:";
 	private static final String USER_NOT_FOUND_MESSAGE = "There was no user with that username, enter 1 to try again, 2 to create a new account, or Q to quit.";
