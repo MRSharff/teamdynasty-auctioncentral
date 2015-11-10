@@ -27,8 +27,6 @@ public class AuctionCentral {
 	
 	public static void main(String[] Args) {
 		
-		
-		
 		boolean quitFlag = false;
 		User currentUser = null;
 		TreeSet<User> userList = new TreeSet<User>();
@@ -58,12 +56,15 @@ public class AuctionCentral {
 			case 1: //ACEmployee options
 				printACEOptions();
 				option = chooseOption();
+				break;
 			case 2: //NPO options
 				printNPOOptions();
 				option = chooseOption();
+				break;
 			case 3: //Bidder Options
 				printBidderOptions();
 				option = chooseOption();
+				break;
 			}
 			System.out.println("Made it here");
 		}
