@@ -1,5 +1,8 @@
+import java.util.HashMap;
+import java.util.TreeSet;
 
-public class ACEmployee extends AbstractUser implements Options {
+
+public class ACEmployee extends AbstractUser {// implements Options {
 
 	private static final String[] OPTIONS = {"[1] View Monthly Calendar",
 		 									 "[2] View details of auction"};
@@ -25,6 +28,13 @@ public class ACEmployee extends AbstractUser implements Options {
 	@Override
 	public int compareTo(AbstractUser otherUser) {
 		return getUsername().compareTo(otherUser.getUsername());
+	}
+
+	@Override
+	public void doAction(int theOption, HashMap<String, Auction> theAuctionList,
+			TreeSet<AbstractUser> theUserList) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

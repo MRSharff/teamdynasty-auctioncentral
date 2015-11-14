@@ -1,12 +1,15 @@
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Scanner;
-import java.util.Set;
 import java.util.TreeSet;
 
 
 public class AuctionCentral {
+	
+	public static final int IACEMPLOYEE = 1;
+	public static final int INPO = 2;
+	public static final int IBIDDER = 3;
+	
+	public static final String BR_ONEBID = "You may not bid on an item more than once";
 	
 	private static final String LOGIN_MESSAGE = "Choose an action:\n"
 												+ "[1] Login\n"
@@ -25,15 +28,18 @@ public class AuctionCentral {
 	private static final String NEXT_ACTION_MESSAGE = "Choose what action you would like to perform";
 	
 	
+	
+	
 	public static void main(String[] Args) {
 		
 		
-		
+		//initialize variables for the current user and the auction list
 		boolean quitFlag = false;
 		AbstractUser currentUser = null;
 		TreeSet<AbstractUser> userList = new TreeSet<AbstractUser>();
-		List<Auction> auctionList = new LinkedList<Auction>();
-		int userType;
+		HashMap<String, Auction> auctionList = new HashMap<String, Auction>();
+//		List<Auction> auctionList = new LinkedList<Auction>();
+//		int userType;
 		
 		
 		//Setup for testing purposes
@@ -63,41 +69,27 @@ public class AuctionCentral {
 				while ((currentUser = createNewUser(userList)) == null) {
 					System.out.println(USERNAME_COPY_ERROR_MESSAGE);
 				}
+				break;
 			case 3:
 				System.exit(0);
 			}
 			
-			/*if (option == 1) { //option 1 is to login
-				while((currentUser = logIn(userList)) == null) {
-					System.out.println(USER_NOT_FOUND_MESSAGE);
-				}
-			} else if {
-				while ((currentUser = createNewUser(userList)) == null) {
-					System.out.println(USERNAME_COPY_ERROR_MESSAGE);
-				}
-			} else if (option == 3) { //option 3 is quit
-				System.exit(0);
-			}*/
-			
 			System.out.println(LOGIN_SUCCESSFUL_MESSAGE + currentUser.getUsername());
-			userType = currentUser.getUserType();
+			//userType = currentUser.getUserType();
 			
+			//Print the options for the current user type.
 			System.out.println(NEXT_ACTION_MESSAGE);
-//			switch (userType) {
-//			case 1: //ACEmployee options
-//				printACEOptions();
-//				option = chooseOption();
-//				break;
-//			case 2: //NPO options
-//				printNPOOptions();
-//				option = chooseOption();
-//				break;
-//			case 3: //Bidder Options
-//				printBidderOptions();
-//				option = chooseOption();
-//				break;
-//			}
-			((Options) currentUser).showOptions();
+			
+			//show the options of the current user, different for each subclass.
+			currentUser.showOptions();
+			
+			//prompt for user input
+			option = chooseOption();
+			
+			//carry out action
+			currentUser.doAction(option, auctionList, userList);
+			
+			//Debug statement
 			System.out.println("Made it here");
 		}
 		
@@ -122,37 +114,7 @@ public class AuctionCentral {
 	}
 	
 	private static AbstractUser createNewUser(TreeSet<AbstractUser> theUserList) {
-//		String newUser = null;
-//		System.out.println(NEW_USER_MESSAGE);
-//		
-//		
-//		
-//		boolean flag = false;
-//		
-//		
-//		while (!flag) {
-//			boolean found = false;
-//			Scanner commandInput = new Scanner(System.in);
-//			newUser = commandInput.nextLine();
-//			commandInput.close();
-//			for (User theUser : theUserList) {
-//				if (theUser.getUsername().equals(newUser)) {
-//					System.out.println(USERNAME_COPY_ERROR_MESSAGE);
-//					found = true;
-//					break;
-//				}
-//			}
-//			if (!found) {
-//				flag = true;
-//			}
-//		}
-//		
-//		int userType = getUserType();
-//		if (userType == 1) {
-//			return new NonProfitOrganization(newUser);
-//		}
-//		
-//		return new Bidder(newUser);
+
 		System.out.println(NEW_USER_MESSAGE);
 		
 		Scanner commandInput = new Scanner(System.in);
@@ -166,7 +128,21 @@ public class AuctionCentral {
 		
 		
 		int userType = getUserType();
-		if (userType == 1) {
+		
+		switch (userType) {
+		case 1:
+			AbstractUser newUser1 = new ACEmployee(userName);
+			theUserList.add(newUser1);
+			return newUser1;
+		case 2:
+			AbstractUser newUser2 = new NonProfitOrganization(userName);
+			theUserList.add(newUser2);
+			return newUser2;
+		case 3:
+			AbstractUser newUser3 = new Bidder(userName);
+			theUserList.add(newUser3);
+		}
+		if (userType == 2) {
 			AbstractUser newUser = new NonProfitOrganization(userName);
 			theUserList.add(newUser);
 			return newUser;
@@ -191,25 +167,6 @@ public class AuctionCentral {
 		}
 		
 		return null;
-	}
-	
-	private static void printACEOptions() {
-		System.out.println("[1] View Monthly Calendar");
-		System.out.println("[2] View details of auction");
-	}
-	
-	private static void printNPOOptions() {
-		System.out.println("[1] Schedule Auction");
-		System.out.println("[2] Create Auction");
-		System.out.println("[3] Edit Auction");
-		System.out.println("[4] Create New Inventory Item");
-		System.out.println("[5] Edit Inventory Item");
-	}
-	
-	private static void printBidderOptions() {
-		System.out.println("[1] View Available Auctions");
-		System.out.println("[2] Bid on Item");
-		System.out.println("[3] Change Bid");
 	}
 	
 	private static void setupUsers(TreeSet<AbstractUser> theUsers) {

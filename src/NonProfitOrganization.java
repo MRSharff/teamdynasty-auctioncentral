@@ -1,16 +1,14 @@
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.TreeSet;
 
 
-public class NonProfitOrganization extends AbstractUser implements Options {
+public class NonProfitOrganization extends AbstractUser {//implements Options {
 	
 	private static final String[] OPTIONS = {"[1] Schedule Auction",
 											 "[2] Create Auction",
 											 "[3] Edit Auction",
 											 "[4] Create New Inventory Item",
 											 "[5] Edit Inventory Item"};
-	
-	
-	private HashSet<Item> myInventory;
 	
 	
 	public NonProfitOrganization(String theUsername) {
@@ -63,6 +61,13 @@ public class NonProfitOrganization extends AbstractUser implements Options {
 		for (String option : OPTIONS) {
 			System.out.println(option);
 		}
+	}
+
+	@Override
+	public void doAction(int theOption, HashMap<String, Auction> theAuctionList,
+			TreeSet<AbstractUser> theUserList) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
