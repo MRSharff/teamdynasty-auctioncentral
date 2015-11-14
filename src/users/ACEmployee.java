@@ -1,3 +1,8 @@
+package users;
+
+import model.Auction;
+import model.AuctionCentral;
+
 import java.util.HashMap;
 import java.util.TreeSet;
 
@@ -8,7 +13,7 @@ public class ACEmployee extends AbstractUser {// implements Options {
 		 									 "[2] View details of auction"};
 	
 	public ACEmployee(String theUsername) {
-		super(theUsername, 1);
+		super(theUsername, AuctionCentral.IACEMPLOYEE);
 	}
 
 	public void viewCalendar() {

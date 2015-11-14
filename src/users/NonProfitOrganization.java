@@ -1,23 +1,30 @@
+package users;
+
+import model.Auction;
+import model.AuctionCalendar;
+import model.AuctionCentral;
+
 import java.util.HashMap;
 import java.util.TreeSet;
 
 
 public class NonProfitOrganization extends AbstractUser {//implements Options {
 	
-	private static final String[] OPTIONS = {"[1] Schedule Auction",
-											 "[2] Create Auction",
-											 "[3] Edit Auction",
-											 "[4] Create New Inventory Item",
-											 "[5] Edit Inventory Item"};
+	private static final String[] OPTIONS = {"[1] Schedule model.Auction",
+											 "[2] Create model.Auction",
+											 "[3] Edit model.Auction",
+											 "[4] Create New Inventory model.Item",
+											 "[5] Edit Inventory model.Item"};
 	
 	
 	public NonProfitOrganization(String theUsername) {
-		super(theUsername, 2);
-		//myInventory = new HashSet<Item>();
+		super(theUsername, AuctionCentral.INPO);
+		//myInventory = new HashSet<model.Item>();
 	}
 	
-	public void createAuction() {
+	public Auction createAuction() {
 		//code to enter auction info goes here
+    return null;
 	}
 	
 	public void scheduleAuction() {

@@ -1,3 +1,6 @@
+package model;
+
+import users.Bidder;
 
 public class Bid {
 	

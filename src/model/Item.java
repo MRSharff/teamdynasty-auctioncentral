@@ -1,3 +1,7 @@
+package model;
+
+import users.Bidder;
+
 import java.util.HashMap;
 import java.util.Set;
 
@@ -17,8 +21,7 @@ public class Item {
 
 	
 	public String getName() {
-		String returnStr = myName;
-		return returnStr; //return a copy
+		return myName;
 	}
 	
 	public int getQuantity() {

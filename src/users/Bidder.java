@@ -1,3 +1,9 @@
+package users;
+
+import model.Auction;
+import model.AuctionCentral;
+import model.Item;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,15 +13,15 @@ import java.util.TreeSet;
 
 public class Bidder extends AbstractUser {//implements Options {
 	
-	private static final String[] OPTIONS = {"[1] Choose a Non-profit Organization to View their Auction",
-		 									 "[2] Bid on Item",
-		 									 "[3] Change Bid"};
+	private static final String[] OPTIONS = {"[1] Choose a Non-profit Organization to View their model.Auction",
+		 									 "[2] model.Bid on model.Item",
+		 									 "[3] Change model.Bid"};
 
 	int myCredit;
 	Auction currentAuction;
 	
 	public Bidder(String theUsername) {
-		super(theUsername, 3);
+		super(theUsername, AuctionCentral.IBIDDER);
 		myCredit = 0;
 	}
 
@@ -32,7 +38,7 @@ public class Bidder extends AbstractUser {//implements Options {
 	
 	private static String listNPO(TreeSet<AbstractUser> theUserList) {
 		Scanner uInput = new Scanner(System.in);
-//		List<NonProfitOrganization> NPOList;
+//		List<users.NonProfitOrganization> NPOList;
 		List<String> NPOList = new ArrayList<String>();
 		
 		
@@ -56,7 +62,7 @@ public class Bidder extends AbstractUser {//implements Options {
 	public void placeBid(final Item theItem) {
 		//code to place bid goes here
 		
-		//Business Rule: only one bid on an Item per bidder
+		//Business Rule: only one bid on an model.Item per bidder
 		
 		
 	}
