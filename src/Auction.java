@@ -1,20 +1,49 @@
 import java.util.Date;
+import java.util.List;
 
 
 public class Auction implements Comparable<Auction> {
 	
 	private NonProfitOrganization myOwner;
-	private Date myDate;
-	private Item myItem;
+	private Date myStartDate;
+	private Date myEndDate;
+	private List<Item> myItems;
 	
 	
-	public Auction(Date theDate, Item theItem) {
-		myDate = theDate;
-		myItem = theItem;
+	public Auction(Date theStartDate, Date theEndDate, List<Item> theItems) {
+		myStartDate = theStartDate;
+		myEndDate = theEndDate;
+		myItems = theItems;
+	}
+	
+	public Auction(Date theStartDate, Date theEndDate) {
+		myStartDate = theStartDate;
+		myEndDate = theEndDate;
+		myItems = null;
+	}
+	
+	public NonProfitOrganization getOwner() {
+		//WIP to return defensive copy, low priority
+		return myOwner;
+	}
+	
+	public Date getStartDate() {
+		//return defensive copy
+		return new Date(myStartDate.getTime());
+	}
+	
+	public Date getEndDate() {
+		//return defensive copy
+		return new Date(myEndDate.getTime());
+	}
+	
+	public List<Item> getInventory() {
+		//WIP to return defensive copy, low priority
+		return myItems;
 	}
 	
 	/** 
-	 * Implements compareTo in order to keep auctions sorted by date.
+	 * Implements compareTo in order to keep auctions sorted by date start.
 	 * 
 	 * 
 	 * @returns sorting info
@@ -22,7 +51,7 @@ public class Auction implements Comparable<Auction> {
 	 */
 	@Override
 	public int compareTo(Auction otherAuction) {
-		return myDate.compareTo(otherAuction.myDate);
+		return myStartDate.compareTo(otherAuction.myStartDate);
 	}
 	
 	/**
@@ -30,10 +59,10 @@ public class Auction implements Comparable<Auction> {
 	 */
 	public String toString() {
 		return "Date: " + 
-				myDate.getMonth() + "/" + myDate.getDate() +
+				myStartDate.getMonth() + "/" + myStartDate.getDate() +
 				"\nNon-Profit: " +
 				myOwner.toString() +
 				"\nItem: " +
-				myItem.toString();
+				myItems.toString();
 	}
 }
