@@ -1,1 +1,12 @@
 /bin/
+.settings
+
+#ignore IntelliJ Files
+######################
+*.iml
+.idea
+
+#ignore Eclipse Files
+#####################
+.classpath
+.project
