@@ -8,22 +8,29 @@ import java.util.List;
 
 public class Auction implements Comparable<Auction> {
 
+  private String myName;
   private NonProfitOrganization myOwner;
   private Date myStartDate;
   private Date myEndDate;
   private List<Item> myItems;
 
 
-  public Auction(Date theStartDate, Date theEndDate, List<Item> theItems) {
+  public Auction(NonProfitOrganization theOwner, Date theStartDate, Date theEndDate, List<Item> theItems) {
     myStartDate = theStartDate;
     myEndDate = theEndDate;
     myItems = theItems;
+
+    myName = theOwner.getDashedName()
+            + "-"
+            + myStartDate.getMonth()
+            + "-"
+            + myStartDate.getDay()
+            + "-"
+            + myStartDate.getYear();
   }
 
-  public Auction(Date theStartDate, Date theEndDate) {
-    myStartDate = theStartDate;
-    myEndDate = theEndDate;
-    myItems = null;
+  public Auction(NonProfitOrganization theOwner, Date theStartDate, Date theEndDate) {
+    this(theOwner, theStartDate, theEndDate, null);
   }
 
   public NonProfitOrganization getOwner() {

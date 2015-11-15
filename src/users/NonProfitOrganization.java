@@ -4,27 +4,45 @@ import model.Auction;
 import model.AuctionCalendar;
 import model.AuctionCentral;
 
-import java.util.HashMap;
-import java.util.TreeSet;
+import java.util.*;
 
 
 public class NonProfitOrganization extends AbstractUser {//implements Options {
 	
-	private static final String[] OPTIONS = {"[1] Schedule model.Auction",
-											 "[2] Create model.Auction",
-											 "[3] Edit model.Auction",
-											 "[4] Create New Inventory model.Item",
-											 "[5] Edit Inventory model.Item"};
+	private static final String[] OPTIONS = {"[1] Schedule Auction",
+											 "[2] Create Auction",
+											 "[3] Edit Auction",
+											 "[4] Create New Inventory Item",
+											 "[5] Edit Inventory Item"};
+
+  private String myOrgName;
+  private List<Auction> myAuctions;
 	
-	
-	public NonProfitOrganization(String theUsername) {
+	public NonProfitOrganization(final String theUsername, final String theOrgName) {
 		super(theUsername, AuctionCentral.INPO);
+    myOrgName = theOrgName;
 		//myInventory = new HashSet<model.Item>();
 	}
 	
 	public Auction createAuction() {
 		//code to enter auction info goes here
-    return null;
+
+//    private NonProfitOrganization myOwner;
+//    private Date myStartDate;
+//    private Date myEndDate;
+//    private List<Item> myItems;
+
+    Scanner detailScanner = new Scanner(System.in);
+    System.out.print("Enter auction date (mm/dd/yy)");
+    int aMonth = detailScanner.nextInt();
+    int aDay = detailScanner.nextInt();
+    int aYear = detailScanner.nextInt();
+    Date startDate = new Date(aYear, aMonth, aDay);
+    Date endDate = new Date(aYear, aMonth, aDay + 1);
+
+    Auction newAuction = new Auction(this, startDate, endDate);
+    myAuctions.add(newAuction);
+    return newAuction;
 	}
 	
 	public void scheduleAuction() {
@@ -48,7 +66,10 @@ public class NonProfitOrganization extends AbstractUser {//implements Options {
 //			System.out.println(option);
 //		}
 //	}
-	
+
+  public String getDashedName() {
+    return myOrgName.replace(" ", "-");
+  }
 	
 	public String toXML() {
 		//WIP

@@ -13,9 +13,9 @@ import java.util.TreeSet;
 
 public class Bidder extends AbstractUser {//implements Options {
 	
-	private static final String[] OPTIONS = {"[1] Choose a Non-profit Organization to View their model.Auction",
-		 									 "[2] model.Bid on model.Item",
-		 									 "[3] Change model.Bid"};
+	private static final String[] OPTIONS = {"[1] Choose a Non-profit Organization to View their Auction",
+		 									 "[2] model.Bid on Item",
+		 									 "[3] Change Bid"};
 
 	int myCredit;
 	Auction currentAuction;

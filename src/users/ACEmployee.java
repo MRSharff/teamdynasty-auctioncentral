@@ -3,6 +3,7 @@ package users;
 import model.Auction;
 import model.AuctionCentral;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.TreeSet;
 
@@ -16,9 +17,7 @@ public class ACEmployee extends AbstractUser {// implements Options {
 		super(theUsername, AuctionCentral.IACEMPLOYEE);
 	}
 
-	public void viewCalendar() {
-		//code to view calendar goes here
-	}
+
 	
 	public void viewBids() {
 		//code to veiwbids goes here.
@@ -38,9 +37,14 @@ public class ACEmployee extends AbstractUser {// implements Options {
 	@Override
 	public void doAction(int theOption, HashMap<String, Auction> theAuctionList,
 			TreeSet<AbstractUser> theUserList) {
-		// TODO Auto-generated method stub
+		switch (theOption) {
+      case 1:
+        //for (Auction)
+    }
 		
 	}
-	
-	
+
+  private void viewCalendar() {
+    //code to view calendar goes here
+  }
 }

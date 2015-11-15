@@ -31,9 +31,9 @@ public class AuctionCentral {
 	private static final String NEW_USER_SPACE_ERROR = "Usernames cannot contain spaces.";
 	private static final String USERNAME_COPY_ERROR_MESSAGE = "That username already exists, please enter a different username:";
 	private static final String USER_TYPE_PROMPT_MESSAGE = "Select User Type:";
-  private static final String[] USER_TYPES = {"[1] Non-Profit Organization", "[2] users.Bidder"};
-
-	private static final String LOGIN_SUCCESSFUL_MESSAGE = "You are now logged in as: ";
+  private static final String[] USER_TYPES = {"[2] Non-Profit Organization", "[3] Bidder"};
+  private static final String USER_TYPE_ERROR = "Incorrect input, please try again";
+  private static final String LOGIN_SUCCESSFUL_MESSAGE = "You are now logged in as: ";
 	private static final String NEXT_ACTION_MESSAGE = "Choose what action you would like to perform";
 
   //End Constants
@@ -49,6 +49,12 @@ public class AuctionCentral {
 		AbstractUser currentUser = null;
 		TreeSet<AbstractUser> userList = new TreeSet<AbstractUser>();
 		HashMap<String, Auction> auctionList = new HashMap<String, Auction>();
+
+
+    //CHANGE HASHMAP KEY TO AN INT REPRESENTING THE MONTH THAT IT IS SCHEDULED
+
+
+
 //		List<model.Auction> auctionList = new LinkedList<model.Auction>();
 //		int userType;
 		
@@ -112,14 +118,25 @@ public class AuctionCentral {
         System.out.println("Logging out\n");
         currentUser = null;
       } else {
-        //carry out action
+        //carry out action depending on user type
         currentUser.doAction(userOption, auctionList, userList);
+//        switch(currentUser.getUserType()) {
+//          case 1:
+//            doACEAction(userOption);
+//        }
       }
     } while (userOption == -1);
 		
 	}
 
-	private static int chooseOption() {
+//  private static void doACEAction(final int userOption, Act) {
+//    switch (userOption) {
+//      case 1:
+//        for (Auction)
+//    }
+//  }
+
+  private static int chooseOption() {
 		Scanner commandInput = new Scanner(System.in);
     if (commandInput.hasNext("L")) {
       return -1;
@@ -145,6 +162,7 @@ public class AuctionCentral {
 	
 	private static AbstractUser createNewUser(TreeSet<AbstractUser> theUserList) {
 
+    AbstractUser newUser = null;
 		System.out.println(NEW_USER_MESSAGE);
 		
 		Scanner commandInput = new Scanner(System.in);
@@ -158,31 +176,35 @@ public class AuctionCentral {
 		
 		
 		int userType = getUserType();
-		
-		switch (userType) {
-		case 1:
-			AbstractUser newUser1 = new ACEmployee(userName);
-			theUserList.add(newUser1);
-			return newUser1;
-		case 2:
-			AbstractUser newUser2 = new NonProfitOrganization(userName);
-			theUserList.add(newUser2);
-			return newUser2;
-		case 3:
-			AbstractUser newUser3 = new Bidder(userName);
-			theUserList.add(newUser3);
-		}
-		if (userType == 2) {
-			AbstractUser newUser = new NonProfitOrganization(userName);
-			theUserList.add(newUser);
-			return newUser;
-		}
-		
-		AbstractUser newUser = new Bidder(userName);
-		theUserList.add(newUser);
-		return newUser;
-		
-	}
+		boolean inputError = false;
+
+      switch (userType) {
+        case 1:
+          newUser = new ACEmployee(userName);
+          break;
+        case 2:
+          System.out.print("Enter the name of your non-profit:");
+          String npoName = commandInput.nextLine();
+          newUser = new NonProfitOrganization(userName, npoName);
+          break;
+        case 3:
+          newUser = new Bidder(userName);
+          break;
+        default:
+          System.out.println(USER_TYPE_ERROR);
+          break;
+      }
+
+    try {
+      theUserList.add(newUser);
+    } catch (NullPointerException exception) {
+      System.out.println("newUser was null");
+    }
+
+    return newUser;
+
+
+  }
 	
 	private static AbstractUser logIn(TreeSet<AbstractUser> theUserList) {
 
@@ -203,7 +225,7 @@ public class AuctionCentral {
 	private static void setupUsers(TreeSet<AbstractUser> theUsers) {
 		ACEmployee newACEmployee = new ACEmployee("ACETester");
 		Bidder newBidder = new Bidder("BidderTester");
-		NonProfitOrganization newNPO = new NonProfitOrganization("NPOTest");
+		NonProfitOrganization newNPO = new NonProfitOrganization("NPOTest", "Test Organization");
 		
 		theUsers.add(newACEmployee);
 		theUsers.add(newBidder);

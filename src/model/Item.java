@@ -11,11 +11,13 @@ public class Item {
 	
 	private String myName;
 	private int myQuantity;
+  private double myMinStartBid;
 	private HashMap<String, Bid> myBids;
 	
-	public Item(final String theName, final int theQuantity) {
+	public Item(final String theName, final int theQuantity, final double theMinStartBid) {
 		myName = theName;
 		myQuantity = theQuantity;
+    myMinStartBid = theMinStartBid;
 		myBids = new HashMap<String, Bid>();
 	}
 
