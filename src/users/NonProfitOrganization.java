@@ -92,7 +92,7 @@ public class NonProfitOrganization extends AbstractUser {//implements Options {
 	}
 
 	@Override
-	public void doAction(int theOption, HashMap<String, Auction> theAuctionList,
+	public void doAction(int theOption, HashMap<String, List<Auction>> theAuctionList,
 			TreeSet<AbstractUser> theUserList) {
 		// TODO Auto-generated method stub
 		

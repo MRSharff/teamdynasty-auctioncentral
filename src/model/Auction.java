@@ -2,6 +2,7 @@ package model;
 
 import users.NonProfitOrganization;
 
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -33,6 +34,10 @@ public class Auction implements Comparable<Auction> {
     this(theOwner, theStartDate, theEndDate, null);
   }
 
+  public String getMyName() {
+    return myName;
+  }
+
   public NonProfitOrganization getOwner() {
     //TODO  return defensive copy, low priority
     return myOwner;
@@ -61,7 +66,8 @@ public class Auction implements Comparable<Auction> {
    */
   @Override
   public int compareTo(Auction otherAuction) {
-    return myStartDate.compareTo(otherAuction.myStartDate);
+//    return myStartDate.compareTo(otherAuction.myStartDate);
+    return this.getStartDate().compareTo(otherAuction.getStartDate());
   }
 
   /**
@@ -69,6 +75,18 @@ public class Auction implements Comparable<Auction> {
    */
   public String toString() {
     //TODO return proper String
-    return myOwner.getUsername() + ":" + myStartDate.toString();
+    StringBuilder returnString = new StringBuilder();
+    returnString.append("Auction Details for: " + myName + "\n");
+    returnString.append("Start Date: " + myStartDate.toString() + "\n");
+    returnString.append("End Date: " + myEndDate.toString() + "\n");
+    returnString.append("Items: \n");
+
+    for (Item item : myItems) {
+      returnString.append(item.toString() + "\n  Bids:");
+      for (Bid bid : item.getBids().values()) {
+        returnString.append(bid.getOwner() + ": " + bid.getAmount());
+      }
+    }
+    return myName + ":\n" + myStartDate.toString();
   }
 }

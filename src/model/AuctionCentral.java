@@ -6,6 +6,7 @@ import users.Bidder;
 import users.NonProfitOrganization;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 import java.util.TreeSet;
 
@@ -48,7 +49,9 @@ public class AuctionCentral {
 		boolean quitFlag = false;
 		AbstractUser currentUser = null;
 		TreeSet<AbstractUser> userList = new TreeSet<AbstractUser>();
-		HashMap<String, Auction> auctionList = new HashMap<String, Auction>();
+
+    //Map auctions by month for easy list of auctions in a calendar
+		HashMap<Integer, List<Auction>> auctionList = new HashMap<Integer, List<Auction>>();
 
 
     //CHANGE HASHMAP KEY TO AN INT REPRESENTING THE MONTH THAT IT IS SCHEDULED

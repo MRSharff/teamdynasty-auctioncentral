@@ -3,6 +3,7 @@ package users;
 import model.Auction;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.TreeSet;
 
 
@@ -41,7 +42,7 @@ public abstract class AbstractUser implements Comparable<AbstractUser> {
 	
 	public abstract void showOptions();
 
-	public abstract void doAction(int theOption, HashMap<String, Auction> theAuctionList,
+	public abstract void doAction(int theOption, HashMap<Integer, List<Auction>> theAuctionList,
 			TreeSet<AbstractUser> theUserList);
 	
 //	public String toXML() {
