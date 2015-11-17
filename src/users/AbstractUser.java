@@ -4,6 +4,7 @@ import model.Auction;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
 import java.util.TreeSet;
 
 
@@ -11,10 +12,11 @@ public abstract class AbstractUser implements Comparable<AbstractUser> {
 	
 	private String myUsername;
 	private int myID;
-	private int myType = 1; //1 = ACE, 2 = NPO, 3 = users.Bidder
+	private int myType; //1 = ACE, 2 = NPO, 3 = users.Bidder
 	
 	public AbstractUser(final String theUsername, final int userType) {
 		myUsername = theUsername;
+    myType = userType;
 	}
 	
 	public String getUsername() {
@@ -28,8 +30,17 @@ public abstract class AbstractUser implements Comparable<AbstractUser> {
 	public int getUserType() {
 		return myType;
 	}
-	
-	
+
+  public int getOption(String theMessage) {
+    Scanner userInput = new Scanner(System.in);
+    System.out.println(theMessage);
+
+    if (userInput.hasNextInt()) {
+      return userInput.nextInt();
+    }
+
+    return -1;
+  }
 	
 	public void logIn() {
 		//code to login goes here

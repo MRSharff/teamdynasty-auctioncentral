@@ -2,12 +2,15 @@ package model;
 
 import users.NonProfitOrganization;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
 
 public class Auction implements Comparable<Auction> {
+
+  private static final String[] OPTIONS = {"[1] Change start date", "[2] Add item", "[3] Remove item"};
 
   private String myName;
   private NonProfitOrganization myOwner;
@@ -25,13 +28,13 @@ public class Auction implements Comparable<Auction> {
             + "-"
             + myStartDate.getMonth()
             + "-"
-            + myStartDate.getDay()
+            + myStartDate.getDate()
             + "-"
             + myStartDate.getYear();
   }
 
   public Auction(NonProfitOrganization theOwner, Date theStartDate, Date theEndDate) {
-    this(theOwner, theStartDate, theEndDate, null);
+    this(theOwner, theStartDate, theEndDate, new ArrayList<Item>());
   }
 
   public String getMyName() {
@@ -58,6 +61,38 @@ public class Auction implements Comparable<Auction> {
     return myItems;
   }
 
+  public void listOptions() {
+    for (String option : OPTIONS) {
+      System.out.println(option);
+    }
+  }
+
+  public void listItems() {
+    int counter = 1;
+    for (Item item : myItems) {
+      System.out.println("[" + counter + "] " + item.getName());
+      counter++;
+    }
+  }
+
+  public void removeItem(Item theItem) {
+    myItems.remove(theItem);
+  }
+
+  public void addItem(Item theItem) {
+    myItems.add(theItem);
+  }
+
+  public void setMyName(String theName) {
+    myName = theName;
+  }
+
+  public void setMyStartDate(Date theDate) {
+    myStartDate = theDate;
+    //TODO set myEndDate according to auction length + start date
+    //set myEndDate accordingly
+  }
+
   /**
    * Implements compareTo in order to keep auctions sorted by date start.
    *
@@ -73,20 +108,25 @@ public class Auction implements Comparable<Auction> {
   /**
    * Returns a string in the form of Date
    */
-  public String toString() {
+  public String viewDetails() {
     //TODO return proper String
     StringBuilder returnString = new StringBuilder();
     returnString.append("Auction Details for: " + myName + "\n");
     returnString.append("Start Date: " + myStartDate.toString() + "\n");
-    returnString.append("End Date: " + myEndDate.toString() + "\n");
+    //returnString.append("End Date: " + myEndDate.toString() + "\n");
     returnString.append("Items: \n");
 
     for (Item item : myItems) {
-      returnString.append(item.toString() + "\n  Bids:");
-      for (Bid bid : item.getBids().values()) {
-        returnString.append(bid.getOwner() + ": " + bid.getAmount());
+      returnString.append(item.getName() + "\n  Bids:\n");
+      for (String bidOwner : item.getBids().keySet()) {
+        returnString.append("    " + bidOwner + ": $" + item.getBids().get(bidOwner) + "\n");
       }
     }
-    return myName + ":\n" + myStartDate.toString();
+    return returnString.toString();
+  }
+
+  @Override
+  public String toString() {
+    return myName;
   }
 }

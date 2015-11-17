@@ -17,6 +17,7 @@ public class AuctionCentral {
 	public static final int IACEMPLOYEE = 1;
 	public static final int INPO = 2;
 	public static final int IBIDDER = 3;
+  public static final int MAX_AUCTIONS_PER_DAY = 2;
 	
 	public static final String BR_ONEBID = "You may not bid on an item more than once";
 	
@@ -36,6 +37,7 @@ public class AuctionCentral {
   private static final String USER_TYPE_ERROR = "Incorrect input, please try again";
   private static final String LOGIN_SUCCESSFUL_MESSAGE = "You are now logged in as: ";
 	private static final String NEXT_ACTION_MESSAGE = "Choose what action you would like to perform";
+
 
   //End Constants
 	
@@ -69,12 +71,11 @@ public class AuctionCentral {
 		//End setup for testing purposes
 
 
-    do  {
+    do {
       //show login option if there is no current user
       while (currentUser == null) {
         //Prompt for login
         System.out.println(LOGIN_MESSAGE);
-
         for (String loginOption : LOGIN_OPTIONS) {
           System.out.println(loginOption);
         }
@@ -119,6 +120,7 @@ public class AuctionCentral {
 
       if (userOption == -1) {
         System.out.println("Logging out\n");
+        userOption = -2; //quick fix. Not optimal
         currentUser = null;
       } else {
         //carry out action depending on user type
@@ -128,7 +130,9 @@ public class AuctionCentral {
 //            doACEAction(userOption);
 //        }
       }
-    } while (userOption == -1);
+    } while (userOption != -1);
+
+    System.out.println("Closing Program...");
 		
 	}
 
