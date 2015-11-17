@@ -20,7 +20,7 @@ public class NonProfitOrganization extends AbstractUser {//implements Options {
 
 
 
-  //private boolean auctionReady;
+  private boolean isScheduled;
   private String myOrgName;
   private Auction myAuction;
   private List<Item> myInventory;
@@ -29,7 +29,7 @@ public class NonProfitOrganization extends AbstractUser {//implements Options {
 		super(theUsername, AuctionCentral.INPO);
     myOrgName = theOrgName;
 		myInventory = new ArrayList<Item>();
-    //auctionReady = false;
+    isScheduled = false;
 	}
 	
 	public Auction createAuction() {
@@ -79,6 +79,7 @@ public class NonProfitOrganization extends AbstractUser {//implements Options {
       theCalendar.getMyAuctions().get(myAuction.getStartDate().getMonthValue()).add(myAuction);
     }
 
+    isScheduled = true;
     System.out.println(myAuction.getMyName() + " scheduled for "
             + myAuction.getStartDate().getHour() + ":" + myAuction.getStartDate().getMinute());
 	}
@@ -114,12 +115,16 @@ public class NonProfitOrganization extends AbstractUser {//implements Options {
 //            userOption.nextLine();
 
             //remove auction from auctionlist because it will be in the wrong list
-            theCalendar.getMyAuctions().get(myAuction.getStartDate().getMonthValue()).remove(myAuction);
+            if (isScheduled) {
+              theCalendar.getMyAuctions().get(myAuction.getStartDate().getMonthValue()).remove(myAuction);
+            }
             //change the auction
             myAuction.newMyStartDate();
             myAuction.newMyEndDate();
             //add it back into the proper list
-            theCalendar.getMyAuctions().get(myAuction.getStartDate().getMonthValue()).add(myAuction);
+            if (isScheduled) {
+              theCalendar.getMyAuctions().get(myAuction.getStartDate().getMonthValue()).add(myAuction);
+            }
             break;
           case 2: //add item
             System.out.println("Choose an option:");
@@ -150,7 +155,7 @@ public class NonProfitOrganization extends AbstractUser {//implements Options {
             System.out.println("Choose which item to remove.");
             myAuction.listItems();
             System.out.print("Item number: ");
-            int itemOption = userOption.nextInt();
+            int itemOption = userOption.nextInt() - 1;
             userOption.nextLine();
             //remove and print removal message
             System.out.println("Removed: " + myAuction.getInventory().remove(itemOption).getName());
@@ -180,6 +185,8 @@ public class NonProfitOrganization extends AbstractUser {//implements Options {
     Item newItem = new Item(itemName, itemQuantity, startingBid);
 
     myInventory.add(newItem);
+
+    System.out.println(newItem.getName() + " added.\n");
 
     return newItem;
 
