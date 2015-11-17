@@ -80,7 +80,8 @@ public class Bidder extends AbstractUser {//implements Options {
 
 		int option = uInput.nextInt();
 		uInput.nextLine();
-
+      System.out.println("You chose " + NPOList.get(option - 1).getMyOrgName() + "'s Auction, "
+      + NPOList.get(option - 1).getMyAuction().getMyName());
 		return NPOList.get(option - 1);
 	}
 

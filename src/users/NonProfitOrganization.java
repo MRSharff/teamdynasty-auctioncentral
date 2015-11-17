@@ -76,13 +76,17 @@ public class NonProfitOrganization extends AbstractUser {//implements Options {
       }
     }
     if (createOkay) {
-      theCalendar.getMyAuctions().get(myAuction.getStartDate().getMonthValue()).add(myAuction);
+      //theCalendar.getMyAuctions().get(myAuction.getStartDate().getMonthValue()).add(myAuction);
+      theCalendar.addAuction(myAuction);
     }
 
     isScheduled = true;
-    System.out.println(myAuction.getMyName() + " scheduled for "
-            + myAuction.getStartDate().getHour() + ":" + myAuction.getStartDate().getMinute());
+
 	}
+
+  public String getMyOrgName() {
+    return myOrgName;
+  }
 	
 	public void editAuction(AuctionCalendar theCalendar) {
 		//code to edit auction goes here
@@ -93,6 +97,8 @@ public class NonProfitOrganization extends AbstractUser {//implements Options {
       if (myAuction == null) {
         System.out.println("You do not have an auction to edit");
       } else {
+        System.out.println("\nCurrent Auction Details:");
+        System.out.println(myAuction.viewDetails());
         System.out.println("Choose what you would like to edit: ");
         myAuction.listOptions();
         System.out.println("[-1] Go back");
@@ -116,14 +122,14 @@ public class NonProfitOrganization extends AbstractUser {//implements Options {
 
             //remove auction from auctionlist because it will be in the wrong list
             if (isScheduled) {
-              theCalendar.getMyAuctions().get(myAuction.getStartDate().getMonthValue()).remove(myAuction);
+              theCalendar.removeAuction(myAuction);
             }
             //change the auction
             myAuction.newMyStartDate();
             myAuction.newMyEndDate();
             //add it back into the proper list
             if (isScheduled) {
-              theCalendar.getMyAuctions().get(myAuction.getStartDate().getMonthValue()).add(myAuction);
+              theCalendar.addAuction(myAuction);
             }
             break;
           case 2: //add item
@@ -170,6 +176,7 @@ public class NonProfitOrganization extends AbstractUser {//implements Options {
 	
 	public Item createItem() {
 		//code to add inventory item
+    System.out.println("Creating an Item...");
     Scanner itemInfo = new Scanner(System.in);
 
 
@@ -244,7 +251,7 @@ public class NonProfitOrganization extends AbstractUser {//implements Options {
   public void listItems() {
     int counter = 1;
     for (Item item : myInventory) {
-      System.out.println("[" + counter + "] " + item.getName());
+      System.out.println("[" + counter + "] " + item.getName() + " (Minimum bid: $" + item.getMyMinStartBid() + ")");
       counter++;
     }
   }

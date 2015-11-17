@@ -63,7 +63,7 @@ public class AuctionCentral {
 		
 		//Setup for testing purposes
 		System.out.println("Testing Use");
-		setupUsers(myCalendar.getMyUserList());
+		setupUsers(myCalendar);
 		System.out.println("User list: \n" + myCalendar.getMyUserList().toString() + "\n");
 		//End setup for testing purposes
 
@@ -226,14 +226,20 @@ public class AuctionCentral {
 		return null;
 	}
 	
-	private static void setupUsers(TreeSet<AbstractUser> theUsers) {
+	private static void setupUsers(AuctionCalendar theCalendar) {
 		ACEmployee newACEmployee = new ACEmployee("ACETester");
 		Bidder newBidder = new Bidder("BidderTester");
 		NonProfitOrganization newNPO = new NonProfitOrganization("NPOTest", "Test Organization");
-		
-		theUsers.add(newACEmployee);
-		theUsers.add(newBidder);
-		theUsers.add(newNPO);
+    NonProfitOrganization newNPO2 = new NonProfitOrganization("NPOTest2", "Second Organization");
+
+
+
+		theCalendar.getMyUserList().add(newACEmployee);
+		theCalendar.getMyUserList().add(newBidder);
+    theCalendar.getMyUserList().add(newNPO);
+    theCalendar.getMyUserList().add(newNPO2);
+
+
 		
 	}
 	

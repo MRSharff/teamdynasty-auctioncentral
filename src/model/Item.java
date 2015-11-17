@@ -42,6 +42,10 @@ public class Item {
   public void setMyMinStartBid(double theStartingBid) {
     myMinStartBid = theStartingBid;
   }
+
+  public double getMyMinStartBid() {
+    return myMinStartBid;
+  }
 	
 	public void setQuantity(final int theQuantity) {
 		myQuantity = theQuantity;
@@ -52,6 +56,7 @@ public class Item {
     boolean flag = true;
     if (bidAmount < myMinStartBid) {
       System.out.println("You must enter a bid higher than the minimum starting bid of " + myMinStartBid);
+      System.out.println();
       return false;
     } else {
 

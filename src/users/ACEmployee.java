@@ -28,14 +28,14 @@ public class ACEmployee extends AbstractUser {// implements Options {
     String auctionName = null;
     boolean hadAuctions;
 
-    while (auctionName == null ) {
+    if (auctionName == null) {
       System.out.print("Enter the month (numerically) of the auction you'd like to view: ");
 
       aMonth = auctionScanner.nextInt();
       boolean isNumbered = true;
       hadAuctions = viewMonth(aMonth, theCalendar.getMyAuctions(), isNumbered);
 
-      if (!hadAuctions) {
+      if (hadAuctions) {
         System.out.print("Enter the number of the auction you wish to view: ");
         auctionNumber = auctionScanner.nextInt() - 1;
       }
@@ -118,6 +118,7 @@ public class ACEmployee extends AbstractUser {// implements Options {
           count++;
         }
         System.out.println(printer + auction.getMyName());
+        System.out.println();
       }
     } else {
       System.out.println("No Auctions this month");

@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TreeSet;
@@ -35,7 +36,27 @@ public class AuctionCalendar {
   }
 
   public void addAuction(final Auction theAuction) {
-    myAuctions.get(theAuction.getStartDate().getMonthValue()).add(theAuction);
+//    if (!hasMaxAuctions()
+//            && !maxAuctionsInOneDay(theAuction)
+//            && !maxInRollingPeriod(theAuction)
+//            && isWithinMaxDaysOut(theAuction)) {
+//      myAuctions.get(theAuction.getStartDate().getMonthValue()).add(theAuction);
+//    }
+
+    if (hasMaxAuctions()) {
+      System.out.println("Maximum auctions reached, no more auctions can be scheduled.");
+    }
+    if (maxAuctionsInOneDay(theAuction)) {
+        System.out.println("Too many auctions on that day, please reschedule.");
+    }
+    if (!isWithinMaxDaysOut(theAuction)) {
+      System.out.println("You must schedule your auction at a date within " + MAX_DAYS_OUT + " days.");
+      System.out.println("Please change your auction date to no later than " + LocalDate.now().plusDays(MAX_DAYS_OUT));
+    } else {
+      myAuctions.get(theAuction.getStartDate().getMonthValue()).add(theAuction);
+      System.out.println(theAuction.getMyName() + " scheduled for "
+              + theAuction.getStartDate().getHour() + ":" + theAuction.getStartDate().getMinute());
+    }
   }
 
   public TreeSet<AbstractUser> getMyUserList() {
@@ -44,6 +65,10 @@ public class AuctionCalendar {
 
   public void addUser(final AbstractUser theUser) {
     myUserList.add(theUser);
+  }
+
+  public void removeAuction(final Auction theAuction) {
+    myAuctions.get(theAuction.getStartDate().getMonthValue()).remove(theAuction);
   }
 
   /**
@@ -60,14 +85,14 @@ public class AuctionCalendar {
 
   /**
    * BR 2
-   * @param theAuctionDate
+   * @param theAuction
    * @return
    */
-  public boolean isWithinMaxDaysOut(final LocalDateTime theAuctionDate) {
+  public boolean isWithinMaxDaysOut(final Auction theAuction) {
     //returns the auctions date minus the max days out (90 in tcss 360 case) and checks if it's after
     //the current date
     //returns the opposite of this comparison (auctionDate - max days > now)
-    return (!theAuctionDate.minusDays(MAX_DAYS_OUT).isAfter(LocalDateTime.now()));
+    return (!theAuction.getStartDate().minusDays(MAX_DAYS_OUT).isAfter(LocalDateTime.now()));
   }
 
   /**
