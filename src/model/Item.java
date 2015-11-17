@@ -47,22 +47,26 @@ public class Item {
 		myQuantity = theQuantity;
 	}
 	
-	public void addBid(final String theBidder, final double bidAmount) {
+	public boolean addBid(final String theBidder, final double bidAmount) {
 		//BR 6 implemented here
-
+    boolean flag = true;
     if (bidAmount < myMinStartBid) {
       System.out.println("You must enter a bid higher than the minimum starting bid of " + myMinStartBid);
-    }
-		
-		if (!hasDuplicateBidder(theBidder)) {
-			myBids.put(theBidder, bidAmount);
-		} else {
-			if (myBids.get(theBidder) < bidAmount) {
+      return false;
+    } else {
+
+      if (!hasDuplicateBidder(theBidder)) {
         myBids.put(theBidder, bidAmount);
       } else {
-        System.out.println("You must enter a higher bid.");
+        if (myBids.get(theBidder) < bidAmount) {
+          myBids.put(theBidder, bidAmount);
+        } else {
+          System.out.println("You must enter a higher bid.");
+          return false;
+        }
       }
-		}
+    }
+    return true;
 	}
 
   public void listOptions() {

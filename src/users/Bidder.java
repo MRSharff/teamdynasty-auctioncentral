@@ -1,9 +1,6 @@
 package users;
 
-import model.Auction;
-import model.AuctionCentral;
-import model.Bid;
-import model.Item;
+import model.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,11 +23,11 @@ public class Bidder extends AbstractUser {//implements Options {
 		myCredit = 0;
 	}
 
-	public void chooseAuction(HashMap<Integer, List<Auction>> theAuctionList, TreeSet<AbstractUser> theUserList) {
+	public void chooseAuction(AuctionCalendar theCalendar) {
 		//code to choose auction goes here
 //
 //		//Choose an NPO to view the auction of
-		currentAuction = listNPO(theUserList).getMyAuction();
+		currentAuction = listNPO(theCalendar.getMyUserList()).getMyAuction();
 
     currentAuction.viewDetails();
 //
@@ -115,9 +112,11 @@ public class Bidder extends AbstractUser {//implements Options {
       bidAmount = bidDetail.nextDouble();
     }
 
-    theItem.addBid(super.getUsername(), bidAmount);
-    System.out.println("Bid $" + bidAmount + " on " + theItem.getName());
-    System.out.println();
+    boolean madeBid = theItem.addBid(super.getUsername(), bidAmount);
+    if (madeBid) {
+      System.out.println("Bid $" + bidAmount + " on " + theItem.getName());
+      System.out.println();
+    }
 
 	}
 	
@@ -137,20 +136,20 @@ public class Bidder extends AbstractUser {//implements Options {
 	}
 
   @Override
-  public void doAction(int theOption, HashMap<Integer, List<Auction>> theAuctionList, TreeSet<AbstractUser> theUserList) {
+  public void doAction(int theOption, AuctionCalendar theCalendar) {
     switch (theOption) {
       case 1: //Choose an auction to bid on.
-        chooseAuction(theAuctionList, theUserList);
+        chooseAuction(theCalendar);
         break;
       case 2:
         if (currentAuction == null) {
-          chooseAuction(theAuctionList, theUserList);
+          chooseAuction(theCalendar);
         }
         placeBid(chooseItem());
         break;
       case 3:
         if (currentAuction == null) {
-          chooseAuction(theAuctionList, theUserList);
+          chooseAuction(theCalendar);
         }
         changeBid(chooseItem());
     }

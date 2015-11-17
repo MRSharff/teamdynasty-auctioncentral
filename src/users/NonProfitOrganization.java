@@ -1,6 +1,7 @@
 package users;
 
 import model.Auction;
+import model.AuctionCalendar;
 import model.AuctionCentral;
 import model.Item;
 
@@ -44,7 +45,7 @@ public class NonProfitOrganization extends AbstractUser {//implements Options {
     return newAuction;
 	}
 	
-	public void scheduleAuction(HashMap<Integer, List<Auction>> theAuctionList) {
+	public void scheduleAuction(AuctionCalendar theCalendar) {
 		//code to create auction goes here
 
     //if the NPO doesn't have an auction, create one
@@ -52,10 +53,10 @@ public class NonProfitOrganization extends AbstractUser {//implements Options {
       System.out.println("You do not have an auction to schedule, please create one first.");
       createAuction();
     }
-    if (!theAuctionList.containsKey(myAuction.getStartDate().getMonth())) {
+    if (!theCalendar.getMyAuctions().containsKey(myAuction.getStartDate().getMonth())) {
       ArrayList<Auction> newList = new ArrayList<Auction>();
 
-      theAuctionList.put(myAuction.getStartDate().getMonthValue(), newList);
+      theCalendar.getMyAuctions().put(myAuction.getStartDate().getMonthValue(), newList);
       //debug statement
       //System.out.println("list created.");
     }
@@ -64,7 +65,7 @@ public class NonProfitOrganization extends AbstractUser {//implements Options {
     //for each option of the same month, check day, no more than 2
     boolean createOkay = true;
     int count = 0;
-    for (Auction auction : theAuctionList.get(myAuction.getStartDate().getMonthValue())) {
+    for (Auction auction : theCalendar.getMyAuctions().get(myAuction.getStartDate().getMonthValue())) {
       if (auction.getStartDate().getDayOfMonth() == myAuction.getStartDate().getDayOfMonth()) {
         count++;
       }
@@ -75,11 +76,14 @@ public class NonProfitOrganization extends AbstractUser {//implements Options {
       }
     }
     if (createOkay) {
-      theAuctionList.get(myAuction.getStartDate().getMonthValue()).add(myAuction);
+      theCalendar.getMyAuctions().get(myAuction.getStartDate().getMonthValue()).add(myAuction);
     }
+
+    System.out.println(myAuction.getMyName() + " scheduled for "
+            + myAuction.getStartDate().getHour() + ":" + myAuction.getStartDate().getMinute());
 	}
 	
-	public void editAuction(HashMap<Integer, List<Auction>> theAuctionList) {
+	public void editAuction(AuctionCalendar theCalendar) {
 		//code to edit auction goes here
     Scanner userOption = new Scanner(System.in);
 
@@ -110,12 +114,12 @@ public class NonProfitOrganization extends AbstractUser {//implements Options {
 //            userOption.nextLine();
 
             //remove auction from auctionlist because it will be in the wrong list
-            theAuctionList.get(myAuction.getStartDate().getMonthValue()).remove(myAuction);
+            theCalendar.getMyAuctions().get(myAuction.getStartDate().getMonthValue()).remove(myAuction);
             //change the auction
             myAuction.newMyStartDate();
             myAuction.newMyEndDate();
             //add it back into the proper list
-            theAuctionList.get(myAuction.getStartDate().getMonthValue()).add(myAuction);
+            theCalendar.getMyAuctions().get(myAuction.getStartDate().getMonthValue()).add(myAuction);
             break;
           case 2: //add item
             System.out.println("Choose an option:");
@@ -271,17 +275,16 @@ public class NonProfitOrganization extends AbstractUser {//implements Options {
 	}
 
 	@Override
-	public void doAction(int theOption, HashMap<Integer, List<Auction>> theAuctionList,
-			TreeSet<AbstractUser> theUserList) {
+	public void doAction(int theOption, AuctionCalendar theCalendar) {
     switch (theOption) {
       case 1:
-        scheduleAuction(theAuctionList);
+        scheduleAuction(theCalendar);
         break;
       case 2:
         createAuction();
         break;
       case 3:
-        editAuction(theAuctionList);
+        editAuction(theCalendar);
         break;
       case 4:
         createItem();

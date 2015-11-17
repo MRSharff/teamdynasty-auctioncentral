@@ -50,10 +50,7 @@ public class AuctionCentral {
     int userOption;
 		boolean quitFlag = false;
 		AbstractUser currentUser = null;
-		TreeSet<AbstractUser> userList = new TreeSet<AbstractUser>();
-
-    //Map auctions by month for easy list of auctions in a calendar
-		HashMap<Integer, List<Auction>> auctionList = new HashMap<Integer, List<Auction>>();
+    AuctionCalendar myCalendar = new AuctionCalendar();
 
 
     //CHANGE HASHMAP KEY TO AN INT REPRESENTING THE MONTH THAT IT IS SCHEDULED
@@ -66,8 +63,8 @@ public class AuctionCentral {
 		
 		//Setup for testing purposes
 		System.out.println("Testing Use");
-		setupUsers(userList);
-		System.out.println("User list: \n" + userList.toString() + "\n");
+		setupUsers(myCalendar.getMyUserList());
+		System.out.println("User list: \n" + myCalendar.getMyUserList().toString() + "\n");
 		//End setup for testing purposes
 
 
@@ -86,12 +83,12 @@ public class AuctionCentral {
 
         switch (userOption) {
           case 1:
-            while ((currentUser = logIn(userList)) == null) {
+            while ((currentUser = logIn(myCalendar.getMyUserList())) == null) {
               System.out.println(USER_NOT_FOUND_MESSAGE);
             }
             break;
           case 2:
-            while ((currentUser = createNewUser(userList)) == null) {
+            while ((currentUser = createNewUser(myCalendar.getMyUserList())) == null) {
               System.out.println(USERNAME_COPY_ERROR_MESSAGE);
             }
             break;
@@ -124,7 +121,7 @@ public class AuctionCentral {
         currentUser = null;
       } else {
         //carry out action depending on user type
-        currentUser.doAction(userOption, auctionList, userList);
+        currentUser.doAction(userOption, myCalendar);
 //        switch(currentUser.getUserType()) {
 //          case 1:
 //            doACEAction(userOption);
