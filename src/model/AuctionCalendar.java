@@ -144,4 +144,8 @@ public class AuctionCalendar {
     return (ChronoUnit.HOURS.between(firstAuction.getEndDate(), secondAuction.getStartDate()) < MINIMUM_HOURS_BETWEEN ||
             ChronoUnit.HOURS.between(secondAuction.getEndDate(), firstAuction.getStartDate()) < MINIMUM_HOURS_BETWEEN);
   }
+
+  public void save() {
+    //TODO Serialize the auctionlist and userlist
+  }
 }
