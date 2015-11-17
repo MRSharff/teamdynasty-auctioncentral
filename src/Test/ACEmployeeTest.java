@@ -7,7 +7,7 @@
 //import Item;
 //
 //import org.junit.Before;
-//import org.junit.Test;
+//import org.junit.test;
 //
 //import java.util.LinkedList;
 //import java.util.List;
@@ -18,7 +18,7 @@
 //
 //public class ACEmployeeTest
 //{
-//	// Test Instance of ACEmployee
+//	// test Instance of ACEmployee
 //	private ACEmployee testACEmployee;
 //
 //	// Private Members of the User Class which were Inherited by ACEmployee
@@ -36,7 +36,7 @@
 //	}
 //
 //	// Testing the Constructor of ACEmployee Class
-//	@Test
+//	@test
 //	public void testACEmployee()
 //	{
 //		assertEquals(testACEmployee.getUsername(), myUsername);
@@ -44,15 +44,15 @@
 //	}
 //
 //	// Testing the View Calendar function of ACEmployee Class
-//	@Test
+//	@test
 //	public void testViewCalendar()
 //	{
-//		// Test Empty Auction List In the Auction Calendar
+//		// test Empty Auction List In the Auction Calendar
 //		AuctionCalendar AC=new AuctionCalendar();
 //		testACEmployee.viewCalendar(AC);
 //		assertTrue(AC.getAuctionList().isEmpty());
 //
-//		// Test Auction List within a Auction Calendar
+//		// test Auction List within a Auction Calendar
 //		AuctionCalendar AC=new AuctionCalendar();
 //		AC.addAuction(new Auction(Date('14-11-2015'),new Item('Item1',25)));
 //		AC.addAuction(new Auction(Date('10-10-2015'),new Item('Item2',45)));
@@ -63,15 +63,15 @@
 //	}
 //
 //	// Testing the View Auction Details function of ACEmployee Class
-//	@Test
+//	@test
 //	public void testViewAuctionDetails()
 //	{
-//		// Test Empty Auction List
+//		// test Empty Auction List
 //		List<Auction> AuctionList= new LinkedList<Auction>();
 //		testACEmployee.viewAuctionDetails(AuctionList);
 //		assertTrue(AuctionList.isEmpty());
 //
-//		// Test Auctions in a Auction List
+//		// test Auctions in a Auction List
 //		List<Auction> AuctionList= new LinkedList<Auction>();
 //		AuctionList.add(new Auction(Date('14-11-2015'),new Item('Item1',25)));
 //		AuctionList.add(new Auction(Date('10-10-2015'),new Item('Item2',45)));

@@ -1,7 +1,6 @@
 package users;
 
 import model.Auction;
-import model.AuctionCalendar;
 import model.AuctionCentral;
 import model.Item;
 
@@ -61,8 +60,6 @@ public class NonProfitOrganization extends AbstractUser {//implements Options {
 
     //if the NPO doesn't have an auction, create one
     if (!hasAuction()) {
-      //TODO make a list of auctions that an NPO can have, list them,
-      //TODO and let them pick which auction they want to schedule
       System.out.println("You do not have an auction to schedule, please create one first.");
       createAuction();
     }
