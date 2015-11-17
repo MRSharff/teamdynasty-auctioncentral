@@ -116,8 +116,7 @@ public class ACEmployeeTest {
 		// It should Print the Auction Details in the Auction List
 		testACEmployee.viewCalendar(theAuctionList);
 
-		System.out
-				.println("The viewCalendar(final HashMap<Integer, List<Auction>> theAuctionList) method has Passed the Test Successfully");
+		System.out.println("The viewCalendar(final HashMap<Integer, List<Auction>> theAuctionList) method has Passed the Test Successfully");
 
 	}
 
