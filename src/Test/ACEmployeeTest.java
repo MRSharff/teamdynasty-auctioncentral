@@ -46,16 +46,14 @@ public class ACEmployeeTest {
 		System.out.println("Testing the Constructor of ACEmployee");
 		assertEquals(testACEmployee.getUsername(), myUsername);
 		assertEquals(testACEmployee.getUserType(), myType);
-		System.out
-				.println("Constructor of ACEmployee Passed the test Successfully");
+		System.out.println("Constructor of ACEmployee Passed the test Successfully");
 	}
 
 	// Testing the View Calendar method of ACEmployee Class
 	@Test
 	public void testViewCalendar() {
 
-		System.out
-				.println("Testing the viewCalendar(final HashMap<Integer, List<Auction>> theAuctionList) method");
+		System.out.println("Testing the viewCalendar(final HashMap<Integer, List<Auction>> theAuctionList) method");
 		// Test Empty Auction List In the Auction Central
 		HashMap<Integer, List<Auction>> theAuctionList = new HashMap<Integer, List<Auction>>();
 		assertTrue(theAuctionList.isEmpty());
@@ -127,8 +125,7 @@ public class ACEmployeeTest {
 	@Test
 	public void testViewAuctionDetails() {
 
-		System.out
-				.println("Testing the viewAuctionDetails(HashMap<Integer, List<Auction>> theAuctionList) method");
+		System.out.println("Testing the viewAuctionDetails(HashMap<Integer, List<Auction>> theAuctionList) method");
 		// Test Empty Auction List In the Auction Central
 		HashMap<Integer, List<Auction>> theAuctionList = new HashMap<Integer, List<Auction>>();
 		assertTrue(theAuctionList.isEmpty());
@@ -189,7 +186,6 @@ public class ACEmployeeTest {
 		// It should Print the Auction Details in the Auction List
 		testACEmployee.viewAuctionDetails(theAuctionList);
 
-		System.out
-				.println("Testing the viewAuctionDetails(HashMap<Integer, List<Auction>> theAuctionList) method has Passed the Test Successfully");
+		System.out.println("Testing the viewAuctionDetails(HashMap<Integer, List<Auction>> theAuctionList) method has Passed the Test Successfully");
 	}
 }
