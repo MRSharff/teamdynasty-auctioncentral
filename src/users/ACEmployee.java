@@ -5,19 +5,17 @@ import model.AuctionCentral;
 
 import java.util.*;
 
-public class ACEmployee extends AbstractUser {// implements Options {
+public class ACEmployee extends AbstractUser { // implements Options {
 
 	private static final String[] OPTIONS = { "[1] View Monthly Calendar",
-			"[2] View details of auction" };
+						  "[2] View details of auction" };
 
 	public ACEmployee(String theUsername) {
 		super(theUsername, AuctionCentral.IACEMPLOYEE);
 	}
 
-	public void viewCalendar(
-			final HashMap<Integer, List<Auction>> theAuctionList) {
+	public void viewCalendar(final HashMap<Integer, List<Auction>> theAuctionList) {
 		// code to view calendar goes here
-
 		String tempInput = "";
 		int aMonth = 0;
 		Scanner monthScanner = new Scanner(System.in);
@@ -28,8 +26,7 @@ public class ACEmployee extends AbstractUser {// implements Options {
 		}
 
 		while (true) {
-			System.out
-					.print("Enter the month (numerically) of the auction you'd like to view or enter -1 to exit the function: ");
+			System.out.print("Enter the month (numerically) of the auction you'd like to view or enter -1 to exit the function: ");
 
 			if (monthScanner.hasNext()) {
 
@@ -48,8 +45,7 @@ public class ACEmployee extends AbstractUser {// implements Options {
 				}
 
 				if (aMonth < 1 || aMonth > 12) {
-					System.out
-							.println("Please Enter a Correct Month Numerical");
+					System.out.println("Please Enter a Correct Month Numerical");
 					continue;
 				}
 
@@ -60,8 +56,7 @@ public class ACEmployee extends AbstractUser {// implements Options {
 		}
 	}
 
-	public void viewAuctionDetails(
-			HashMap<Integer, List<Auction>> theAuctionList) {
+	public void viewAuctionDetails(HashMap<Integer, List<Auction>> theAuctionList) {
 		// code to view Auction Details goes here.
 
 		Scanner auctionScanner = new Scanner(System.in);
@@ -77,8 +72,7 @@ public class ACEmployee extends AbstractUser {// implements Options {
 		}
 
 		while (true) {
-			System.out
-					.print("Enter the month (numerically) of the auction you'd like to view or enter -1 to exit the function: ");
+			System.out.print("Enter the month (numerically) of the auction you'd like to view or enter -1 to exit the function: ");
 
 			if (auctionScanner.hasNext()) {
 
@@ -97,8 +91,7 @@ public class ACEmployee extends AbstractUser {// implements Options {
 				}
 
 				if (aMonth < 1 || aMonth > 12) {
-					System.out
-							.println("Please Enter a Correct Month Numerical");
+					System.out.println("Please Enter a Correct Month Numerical");
 					continue;
 				}
 
@@ -109,14 +102,11 @@ public class ACEmployee extends AbstractUser {// implements Options {
 					continue;
 				}
 
-			}
-
-			else {
+			} else {
 				continue;
 			}
 
-			System.out
-					.print("Enter the Auction Number from the above list or enter -1 to exit the function: ");
+			System.out.print("Enter the Auction Number from the above list or enter -1 to exit the function: ");
 
 			if (auctionScanner.hasNext()) {
 
@@ -135,14 +125,13 @@ public class ACEmployee extends AbstractUser {// implements Options {
 				}
 
 				if (auctionNumber < 0 || auctionNumber > count - 1) {
-					System.out
-							.println("Please Enter a Correct Auction Number from the List");
+					System.out.println("Please Enter a Correct Auction Number from the List");
 					continue;
 				}
 
 				// Print Auction Details
 				System.out.println(theAuctionList.get(aMonth)
-						.get(auctionNumber));
+						         .get(auctionNumber));
 
 			}
 
@@ -172,9 +161,8 @@ public class ACEmployee extends AbstractUser {// implements Options {
 
 	}
 
-	private int viewMonth(final int theMonth,
-			final HashMap<Integer, List<Auction>> theAuctionList,
-			boolean numbered) {
+	private int viewMonth(final int theMonth,final HashMap<Integer, 
+	               List<Auction>> theAuctionList, boolean numbered) {
 		List<Auction> currentMonthList = theAuctionList.get(theMonth);
 		int count = 0;
 
