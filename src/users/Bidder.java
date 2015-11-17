@@ -116,6 +116,8 @@ public class Bidder extends AbstractUser {//implements Options {
     }
 
     theItem.addBid(super.getUsername(), bidAmount);
+    System.out.println("Bid $" + bidAmount + " on " + theItem.getName());
+    System.out.println();
 
 	}
 	

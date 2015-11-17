@@ -4,6 +4,8 @@ import model.Auction;
 import model.AuctionCentral;
 import model.Item;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 
@@ -14,6 +16,7 @@ public class NonProfitOrganization extends AbstractUser {//implements Options {
 											 "[3] Edit Auction",
 											 "[4] Create New Inventory Item",
 											 "[5] Edit Inventory Item"};
+
 
 
   //private boolean auctionReady;
@@ -30,27 +33,13 @@ public class NonProfitOrganization extends AbstractUser {//implements Options {
 	
 	public Auction createAuction() {
 		//code to enter auction info goes here
-
-//    private NonProfitOrganization myOwner;
-//    private Date myStartDate;
-//    private Date myEndDate;
-//    private List<Item> myItems;
-
-    Scanner detailScanner = new Scanner(System.in);
-    System.out.print("Enter auction month (numerical): ");
-    int aMonth = detailScanner.nextInt();
-    System.out.print("Enter auction day: ");
-    int aDay = detailScanner.nextInt();
-    System.out.print("Enter auction year: ");
-    int aYear = detailScanner.nextInt();
-    Date startDate = new Date(aYear, aMonth, aDay);
-    Date endDate = new Date(aYear, aMonth, aDay + 1);
-
-    Auction newAuction = new Auction(this, startDate, endDate);
+    Auction newAuction = new Auction(this);
+    newAuction.newMyStartDate();
+    newAuction.newMyEndDate();
 //    myAuctions.add(newAuction);
     myAuction = newAuction;
 
-    System.out.println("Auction created:  " + myAuction.getMyName() + "\n");
+    System.out.println("Auction created: " + myAuction.getMyName() + "\n");
 
     return newAuction;
 	}
@@ -65,7 +54,8 @@ public class NonProfitOrganization extends AbstractUser {//implements Options {
     }
     if (!theAuctionList.containsKey(myAuction.getStartDate().getMonth())) {
       ArrayList<Auction> newList = new ArrayList<Auction>();
-      theAuctionList.put(myAuction.getStartDate().getMonth(), newList);
+
+      theAuctionList.put(myAuction.getStartDate().getMonthValue(), newList);
       //debug statement
       //System.out.println("list created.");
     }
@@ -74,8 +64,8 @@ public class NonProfitOrganization extends AbstractUser {//implements Options {
     //for each option of the same month, check day, no more than 2
     boolean createOkay = true;
     int count = 0;
-    for (Auction auction : theAuctionList.get(myAuction.getStartDate().getMonth())) {
-      if (auction.getStartDate().getDay() == myAuction.getStartDate().getDay()) {
+    for (Auction auction : theAuctionList.get(myAuction.getStartDate().getMonthValue())) {
+      if (auction.getStartDate().getDayOfMonth() == myAuction.getStartDate().getDayOfMonth()) {
         count++;
       }
       if (count > 1) {
@@ -85,7 +75,7 @@ public class NonProfitOrganization extends AbstractUser {//implements Options {
       }
     }
     if (createOkay) {
-      theAuctionList.get(myAuction.getStartDate().getMonth()).add(myAuction);
+      theAuctionList.get(myAuction.getStartDate().getMonthValue()).add(myAuction);
     }
 	}
 	
@@ -100,7 +90,7 @@ public class NonProfitOrganization extends AbstractUser {//implements Options {
       } else {
         System.out.println("Choose what you would like to edit: ");
         myAuction.listOptions();
-        System.out.println("Or -1 to go back");
+        System.out.println("[-1] Go back");
 
         option = userOption.nextInt();
         userOption.nextLine();
@@ -113,18 +103,19 @@ public class NonProfitOrganization extends AbstractUser {//implements Options {
 //            myAuction.setMyName(userOption.nextLine());
 //            break;
           case 1: //change start date
-            System.out.print("Enter new start date (mm/dd/yyyy: ");
-            int month = userOption.nextInt();
-            int day = userOption.nextInt();
-            int year = userOption.nextInt();
-            userOption.nextLine();
+            System.out.print("Change Date: ");
+//            int month = userOption.nextInt();
+//            int day = userOption.nextInt();
+//            int year = userOption.nextInt();
+//            userOption.nextLine();
 
             //remove auction from auctionlist because it will be in the wrong list
-            theAuctionList.get(myAuction.getStartDate().getMonth()).remove(myAuction);
+            theAuctionList.get(myAuction.getStartDate().getMonthValue()).remove(myAuction);
             //change the auction
-            myAuction.setMyStartDate(new Date(year, month, day));
+            myAuction.newMyStartDate();
+            myAuction.newMyEndDate();
             //add it back into the proper list
-            theAuctionList.get(myAuction.getStartDate().getMonth()).add(myAuction);
+            theAuctionList.get(myAuction.getStartDate().getMonthValue()).add(myAuction);
             break;
           case 2: //add item
             System.out.println("Choose an option:");
@@ -248,10 +239,7 @@ public class NonProfitOrganization extends AbstractUser {//implements Options {
   }
 
   public boolean hasAuction() {
-    if (myAuction == null) {
-      return false;
-    }
-    return true;
+    return (myAuction != null);
   }
 
   public Auction getMyAuction() {
