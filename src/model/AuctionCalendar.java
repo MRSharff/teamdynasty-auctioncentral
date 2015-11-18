@@ -28,11 +28,11 @@ public class AuctionCalendar implements Serializable {
   private static int MINIMUM_HOURS_BETWEEN = 2;
 
   private HashMap<Integer, List<Auction>> myAuctions;
-  private TreeSet<AbstractUser> myUserList;
+  private HashMap<String, AbstractUser> myUserList;
 
   public AuctionCalendar() {
     myAuctions = new HashMap<Integer, List<Auction>>(TOTAL_MONTHS);
-    myUserList = new TreeSet<AbstractUser>();
+    myUserList = new HashMap<String, AbstractUser>();
   }
 
   public HashMap<Integer, List<Auction>> getMyAuctions() {
@@ -63,12 +63,12 @@ public class AuctionCalendar implements Serializable {
     }
   }
 
-  public TreeSet<AbstractUser> getMyUserList() {
+  public HashMap<String, AbstractUser> getMyUserList() {
     return myUserList;
   }
 
   public void addUser(final AbstractUser theUser) {
-    myUserList.add(theUser);
+    myUserList.put(theUser.getUsername().toLowerCase(), theUser);
   }
 
   public void removeAuction(final Auction theAuction) {

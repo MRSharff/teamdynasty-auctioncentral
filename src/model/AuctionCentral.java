@@ -56,15 +56,16 @@ public class AuctionCentral {
 
     myCalendar = loadAuctionCalendar(DATABASE_PATH);
     if (myCalendar == null) {
+      System.out.println("Testing Use");
+      setupUsers(myCalendar);
       System.out.println("Creating new ac file");
       myCalendar = new AuctionCalendar();
     }
 
 		
 		//Setup for testing purposes
-		System.out.println("Testing Use");
-		//setupUsers(myCalendar);
-		System.out.println("User list: \n" + myCalendar.getMyUserList().toString() + "\n");
+
+		System.out.println("User list: \n" + myCalendar.getMyUserList().values().toString() + "\n");
 		//End setup for testing purposes
 
 
@@ -160,19 +161,17 @@ public class AuctionCentral {
 		return returnVal;
 	}
 	
-	private static AbstractUser createNewUser(TreeSet<AbstractUser> theUserList) {
+	private static AbstractUser createNewUser(HashMap<String, AbstractUser> theUserList) {
 
     AbstractUser newUser = null;
 		System.out.println(NEW_USER_MESSAGE);
 		
 		Scanner commandInput = new Scanner(System.in);
 		String userName = commandInput.nextLine();
-		
-		for (AbstractUser theUser : theUserList) {
-			if (theUser.getUsername().equals(userName)) {
-				return null;
-			}
-		}
+
+    if (theUserList.keySet().contains(userName.toLowerCase())) {
+      return null;
+    }
 		
 		
 		int userType = getUserType();
@@ -196,7 +195,7 @@ public class AuctionCentral {
       }
 
     try {
-      theUserList.add(newUser);
+      theUserList.put(newUser.getUsername().toLowerCase(), newUser);
     } catch (NullPointerException exception) {
       System.out.println("newUser was null");
     }
@@ -206,18 +205,16 @@ public class AuctionCentral {
 
   }
 	
-	private static AbstractUser logIn(TreeSet<AbstractUser> theUserList) {
+	private static AbstractUser logIn(HashMap<String, AbstractUser> theUserList) {
 
 		System.out.print(GET_USERNAME_MESSAGE);
 		
 		Scanner commandInput = new Scanner(System.in);
 		String userName = commandInput.nextLine();
 		
-		for (AbstractUser theUser : theUserList) {
-			if (theUser.getUsername().equals(userName)) {
-				return theUser;
-			}
-		}
+		if (theUserList.keySet().contains(userName.toLowerCase())) {
+      return theUserList.get(userName.toLowerCase());
+    }
 		
 		return null;
 	}
@@ -230,10 +227,10 @@ public class AuctionCentral {
 
 
 
-		theCalendar.getMyUserList().add(newACEmployee);
-		theCalendar.getMyUserList().add(newBidder);
-    theCalendar.getMyUserList().add(newNPO);
-    theCalendar.getMyUserList().add(newNPO2);
+		theCalendar.getMyUserList().put(newACEmployee.getUsername().toLowerCase(), newACEmployee);
+		theCalendar.getMyUserList().put(newBidder.getUsername().toLowerCase(), newBidder);
+    theCalendar.getMyUserList().put(newNPO.getUsername().toLowerCase(),newNPO);
+    theCalendar.getMyUserList().put(newNPO2.getUsername().toLowerCase(),newNPO2);
 
 
 		
@@ -267,6 +264,18 @@ public class AuctionCentral {
   }
 
   private static void save(final String theFilePath, AuctionCalendar theCalendar) {
+    File file = new File(DATABASE_PATH);
+
+    //if there is no file by found in DATABASE_PATH, create one
+    if (!file.exists()) {
+      try {
+        file.createNewFile();
+      } catch (IOException ioException) {
+        System.out.println("Error, file note created");
+      }
+    }
+
+    //write serialized file
     try {
       FileOutputStream fileOut = new FileOutputStream(theFilePath);
       ObjectOutputStream out = new ObjectOutputStream(fileOut);

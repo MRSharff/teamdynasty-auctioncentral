@@ -61,7 +61,7 @@ public class Bidder extends AbstractUser {//implements Options {
 
 
 
-  	private static NonProfitOrganization listNPO(TreeSet<AbstractUser> theUserList) {
+  	private static NonProfitOrganization listNPO(HashMap<String, AbstractUser> theUserList) {
 		Scanner uInput = new Scanner(System.in);
 //		List<users.NonProfitOrganization> NPOList;
 		List<NonProfitOrganization> NPOList = new ArrayList<NonProfitOrganization>();
@@ -70,7 +70,7 @@ public class Bidder extends AbstractUser {//implements Options {
 		System.out.println("Choose a Non-Profit Organization");
 		//fill list of NPOs to show and print them
 		int counter = 1;
-		for (AbstractUser user : theUserList) {
+		for (AbstractUser user : theUserList.values()) {
 			if (user.getUserType() == AuctionCentral.INPO) {
 				NPOList.add((NonProfitOrganization) user);
 				System.out.println("[" + counter + "] " + user.getUsername());
