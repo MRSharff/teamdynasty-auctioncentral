@@ -3,13 +3,14 @@ package users;
 import model.Auction;
 import model.AuctionCalendar;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 import java.util.TreeSet;
 
 
-public abstract class AbstractUser implements Comparable<AbstractUser> {
+public abstract class AbstractUser implements Comparable<AbstractUser>, Serializable {
 	
 	private String myUsername;
 	private int myID;

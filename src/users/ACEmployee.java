@@ -29,18 +29,19 @@ public class ACEmployee extends AbstractUser {// implements Options {
     boolean hadAuctions;
 
     if (auctionName == null) {
-      System.out.print("Enter the month (numerically) of the auction you'd like to view: ");
+      System.out.print("Enter the month of the auction you'd like to view (1-12): ");
 
       aMonth = auctionScanner.nextInt();
-      boolean isNumbered = true;
-      hadAuctions = viewMonth(aMonth, theCalendar.getMyAuctions(), isNumbered);
+
+      //pass in true because we want a numbered list
+      //the numbers are what we can select
+      hadAuctions = viewMonth(aMonth, theCalendar.getMyAuctions(), true);
 
       if (hadAuctions) {
         System.out.print("Enter the number of the auction you wish to view: ");
         auctionNumber = auctionScanner.nextInt() - 1;
       }
 //    print the proper auction
-
     }
     System.out.println(theCalendar.getMyAuctions().get(aMonth).get(auctionNumber).viewDetails());
 
@@ -77,7 +78,8 @@ public class ACEmployee extends AbstractUser {// implements Options {
     Scanner monthScanner = new Scanner(System.in);
 
     while (aMonth >= 0) {
-      System.out.print("Enter a month by number (1 for January, 2 for February, etc) or enter -1 to return: ");
+      System.out.print("Enter a month by number (1-12)\n" +
+              "[-1] Go back:");
 
       if (monthScanner.hasNextInt()) {
         aMonth = monthScanner.nextInt();

@@ -2,11 +2,12 @@ package model;
 
 import users.Bidder;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Set;
 
 
-public class Item {
+public class Item implements Serializable {
 
   private static final String[] OPTIONS = {"[1] Name", "[2] Quantity", "[3] Minimum Starting Bid"};
 	

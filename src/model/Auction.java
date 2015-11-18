@@ -2,12 +2,13 @@ package model;
 
 import users.NonProfitOrganization;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
 
-public class Auction implements Comparable<Auction> {
+public class Auction implements Comparable<Auction>, Serializable {
 
   private static final String[] OPTIONS = {"[1] Change date", "[2] Add item", "[3] Remove item"};
   private static final int HOUR_OFFSET = 12;

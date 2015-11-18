@@ -5,6 +5,7 @@ import users.AbstractUser;
 import users.Bidder;
 import users.NonProfitOrganization;
 
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
@@ -20,7 +21,8 @@ public class AuctionCentral {
   public static final int MAX_AUCTIONS_PER_DAY = 2;
 	
 	public static final String BR_ONEBID = "You may not bid on an item more than once";
-	
+
+  private static final String DATABASE_PATH = "db/AuctionCalendar.ser";
 	private static final String LOGIN_MESSAGE = "Choose an action:";
 
   private static final String[] LOGIN_OPTIONS = {"[1] Login",
@@ -47,30 +49,28 @@ public class AuctionCentral {
 		
 		
 		//initialize variables for the current user and the auction list
-    int userOption;
+    int userOption = 1;
 		boolean quitFlag = false;
 		AbstractUser currentUser = null;
-    AuctionCalendar myCalendar = new AuctionCalendar();
+    AuctionCalendar myCalendar = null;
 
+    myCalendar = loadAuctionCalendar(DATABASE_PATH);
+    if (myCalendar == null) {
+      System.out.println("Creating new ac file");
+      myCalendar = new AuctionCalendar();
+    }
 
-    //CHANGE HASHMAP KEY TO AN INT REPRESENTING THE MONTH THAT IT IS SCHEDULED
-
-
-
-//		List<model.Auction> auctionList = new LinkedList<model.Auction>();
-//		int userType;
-		
 		
 		//Setup for testing purposes
 		System.out.println("Testing Use");
-		setupUsers(myCalendar);
+		//setupUsers(myCalendar);
 		System.out.println("User list: \n" + myCalendar.getMyUserList().toString() + "\n");
 		//End setup for testing purposes
 
 
     do {
       //show login option if there is no current user
-      while (currentUser == null) {
+      while (currentUser == null && userOption != 3) {
         //Prompt for login
         System.out.println(LOGIN_MESSAGE);
         for (String loginOption : LOGIN_OPTIONS) {
@@ -93,52 +93,48 @@ public class AuctionCentral {
             }
             break;
           case 3:
-            System.exit(0);
+            break;
           default: //if they don't choose any of the options, then print an error message
             System.out.println(LOGIN_ERROR_MESSAGE);
         }
 
-        try {
-          System.out.println(LOGIN_SUCCESSFUL_MESSAGE + currentUser.getUsername() + "\n");
-        } catch (NullPointerException theException) {
-          System.out.println("No currentUser, is null");
-        }
-      }
-      //userType = currentUser.getUserType();
+        if (userOption != 3) {
+          try {
+            System.out.println(LOGIN_SUCCESSFUL_MESSAGE + currentUser.getUsername() + "\n");
+          } catch (NullPointerException theException) {
+            System.out.println("No currentUser, is null");
+          }
+          //userType = currentUser.getUserType();
 
-      //Print the options for the current user type.
-      System.out.println(NEXT_ACTION_MESSAGE);
+          //Print the options for the current user type.
+          System.out.println(NEXT_ACTION_MESSAGE);
 
-      //show the options of the current user, different for each subclass.
-      currentUser.showOptions();
-      System.out.println("[L] Log out");
-      //prompt for user input
-      userOption = chooseOption();
+          //show the options of the current user, different for each subclass.
+          currentUser.showOptions();
+          System.out.println("[L] Log out");
+          //prompt for user input
+          userOption = chooseOption();
 
-      if (userOption == -1) {
-        System.out.println("Logging out\n");
-        userOption = -2; //quick fix. Not optimal
-        currentUser = null;
-      } else {
-        //carry out action depending on user type
-        currentUser.doAction(userOption, myCalendar);
+          if (userOption == -1) {
+            System.out.println("Logging out\n");
+            userOption = -2; //quick fix. Not optimal
+            currentUser = null;
+          } else {
+            //carry out action depending on user type
+            currentUser.doAction(userOption, myCalendar);
 //        switch(currentUser.getUserType()) {
 //          case 1:
 //            doACEAction(userOption);
 //        }
+          }
+        }
       }
-    } while (userOption != -1);
+    } while (userOption != 3);
 
+    save(DATABASE_PATH, myCalendar);
     System.out.println("Closing Program...");
 		
 	}
-
-//  private static void doACEAction(final int userOption, Act) {
-//    switch (userOption) {
-//      case 1:
-//        for (Auction)
-//    }
-//  }
 
   private static int chooseOption() {
 		Scanner commandInput = new Scanner(System.in);
@@ -250,5 +246,38 @@ public class AuctionCentral {
 	private static void loadAuctionList() {
 		//loads a list of auctions into the auctionList
 	}
-	
+
+  private static AuctionCalendar loadAuctionCalendar(final String thePath) {
+    AuctionCalendar temp = null;
+
+    try {
+      FileInputStream fileIn = new FileInputStream(thePath);
+      ObjectInputStream in = new ObjectInputStream(fileIn);
+      temp = (AuctionCalendar) in.readObject();
+      in.close();
+      fileIn.close();
+    } catch (IOException ioException) {
+      System.out.println("Load database IO Exception.");
+      //ioException.printStackTrace();
+    } catch (ClassNotFoundException cnfException) {
+      System.out.println("AuctionCalendar class not found.");
+      //cnfException.printStackTrace();
+    }
+    return temp;
+  }
+
+  private static void save(final String theFilePath, AuctionCalendar theCalendar) {
+    try {
+      FileOutputStream fileOut = new FileOutputStream(theFilePath);
+      ObjectOutputStream out = new ObjectOutputStream(fileOut);
+      out.writeObject(theCalendar);
+      out.close();
+      fileOut.close();
+    } catch (IOException theException) {
+      System.out.println("Save error, IOException");
+      theException.printStackTrace();
+    }
+
+    System.out.println("Saving...");
+  }
 }

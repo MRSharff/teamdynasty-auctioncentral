@@ -2,6 +2,10 @@ package model;
 
 import users.AbstractUser;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -14,7 +18,7 @@ import java.util.TreeSet;
 /**
  * Created by Mat on 11/17/2015.
  */
-public class AuctionCalendar {
+public class AuctionCalendar implements Serializable {
 
   private static int TOTAL_MONTHS = 12;
   private static int MAX_AUCTIONS = 25;
@@ -143,5 +147,9 @@ public class AuctionCalendar {
   public boolean auctionStartTooSoon(final Auction firstAuction, final Auction secondAuction) {
     return (ChronoUnit.HOURS.between(firstAuction.getEndDate(), secondAuction.getStartDate()) < MINIMUM_HOURS_BETWEEN ||
             ChronoUnit.HOURS.between(secondAuction.getEndDate(), firstAuction.getStartDate()) < MINIMUM_HOURS_BETWEEN);
+  }
+
+  private void removeUser(final String theUsername) {
+//    if (myUserList.contains())
   }
 }
