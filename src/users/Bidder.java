@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
-import java.util.TreeSet;
 
 
 public class Bidder extends AbstractUser {//implements Options {
@@ -27,7 +26,7 @@ public class Bidder extends AbstractUser {//implements Options {
 		//code to choose auction goes here
 //
 //		//Choose an NPO to view the auction of
-		currentAuction = listNPO(theCalendar.getMyUserList()).getMyAuction();
+		currentAuction = listNPO(theCalendar.getMyUsers()).getMyAuction();
 
     currentAuction.viewDetails();
 //

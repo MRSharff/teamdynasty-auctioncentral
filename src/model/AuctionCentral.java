@@ -7,9 +7,7 @@ import users.NonProfitOrganization;
 
 import java.io.*;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Scanner;
-import java.util.TreeSet;
 
 
 public class AuctionCentral {
@@ -65,7 +63,7 @@ public class AuctionCentral {
 		
 		//Setup for testing purposes
 
-		System.out.println("User list: \n" + myCalendar.getMyUserList().values().toString() + "\n");
+		System.out.println("User list: \n" + myCalendar.getMyUsers().values().toString() + "\n");
 		//End setup for testing purposes
 
 
@@ -84,12 +82,12 @@ public class AuctionCentral {
 
         switch (userOption) {
           case 1:
-            while ((currentUser = logIn(myCalendar.getMyUserList())) == null) {
+            while ((currentUser = logIn(myCalendar.getMyUsers())) == null) {
               System.out.println(USER_NOT_FOUND_MESSAGE);
             }
             break;
           case 2:
-            while ((currentUser = createNewUser(myCalendar.getMyUserList())) == null) {
+            while ((currentUser = createNewUser(myCalendar.getMyUsers())) == null) {
               System.out.println(USERNAME_COPY_ERROR_MESSAGE);
             }
             break;
@@ -227,10 +225,10 @@ public class AuctionCentral {
 
 
 
-		theCalendar.getMyUserList().put(newACEmployee.getUsername().toLowerCase(), newACEmployee);
-		theCalendar.getMyUserList().put(newBidder.getUsername().toLowerCase(), newBidder);
-    theCalendar.getMyUserList().put(newNPO.getUsername().toLowerCase(),newNPO);
-    theCalendar.getMyUserList().put(newNPO2.getUsername().toLowerCase(),newNPO2);
+		theCalendar.getMyUsers().put(newACEmployee.getUsername().toLowerCase(), newACEmployee);
+		theCalendar.getMyUsers().put(newBidder.getUsername().toLowerCase(), newBidder);
+    theCalendar.getMyUsers().put(newNPO.getUsername().toLowerCase(),newNPO);
+    theCalendar.getMyUsers().put(newNPO2.getUsername().toLowerCase(),newNPO2);
 
 
 		

@@ -2,37 +2,31 @@ package model;
 
 import users.AbstractUser;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.TreeSet;
 
 /**
  * Created by Mat on 11/17/2015.
  */
 public class AuctionCalendar implements Serializable {
 
-  private static int TOTAL_MONTHS = 12;
-  private static int MAX_AUCTIONS = 25;
-  private static int MAX_DAYS_OUT = 90;
-  private static int MAX_ROLLING_AUCTIONS = 5;
-  private static int MAX_ROLLING_DAYS = 7;
-  private static int MINIMUM_HOURS_BETWEEN = 2;
+  private static final int TOTAL_MONTHS = 12;
+  private static final int MAX_AUCTIONS = 25;
+  private static final int MAX_DAYS_OUT = 90;
+  private static final int MAX_ROLLING_AUCTIONS = 5;
+  private static final int MAX_ROLLING_DAYS = 7;
+  private static final int MINIMUM_HOURS_BETWEEN = 2;
 
   private HashMap<Integer, List<Auction>> myAuctions;
-  private HashMap<String, AbstractUser> myUserList;
+  private HashMap<String, AbstractUser> myUsers;
 
   public AuctionCalendar() {
     myAuctions = new HashMap<Integer, List<Auction>>(TOTAL_MONTHS);
-    myUserList = new HashMap<String, AbstractUser>();
+    myUsers = new HashMap<String, AbstractUser>();
   }
 
   public HashMap<Integer, List<Auction>> getMyAuctions() {
@@ -40,39 +34,58 @@ public class AuctionCalendar implements Serializable {
   }
 
   public void addAuction(final Auction theAuction) {
-//    if (!hasMaxAuctions()
-//            && !maxAuctionsInOneDay(theAuction)
-//            && !maxInRollingPeriod(theAuction)
-//            && isWithinMaxDaysOut(theAuction)) {
-//      myAuctions.get(theAuction.getStartDate().getMonthValue()).add(theAuction);
-//    }
 
+    //user a flag, that way we can tell them everything that they need to fix
+    //in order to schedule their auction. If nothing is wrong, the auction is scheduled.
+    boolean bRPass = true;
     if (hasMaxAuctions()) {
       System.out.println("Maximum auctions reached, no more auctions can be scheduled.");
+      bRPass = false;
     }
     if (maxAuctionsInOneDay(theAuction)) {
         System.out.println("Too many auctions on that day, please reschedule.");
+      bRPass = false;
     }
     if (!isWithinMaxDaysOut(theAuction)) {
       System.out.println("You must schedule your auction at a date within " + MAX_DAYS_OUT + " days.");
       System.out.println("Please change your auction date to no later than " + LocalDate.now().plusDays(MAX_DAYS_OUT));
-    } else {
+      bRPass = false;
+    }
+
+    if (bRPass){
       myAuctions.get(theAuction.getStartDate().getMonthValue()).add(theAuction);
       System.out.println(theAuction.getMyName() + " scheduled for "
               + theAuction.getStartDate().getHour() + ":" + theAuction.getStartDate().getMinute());
     }
   }
 
-  public HashMap<String, AbstractUser> getMyUserList() {
-    return myUserList;
+  public HashMap<String, AbstractUser> getMyUsers() {
+    return myUsers;
   }
 
-  public void addUser(final AbstractUser theUser) {
-    myUserList.put(theUser.getUsername().toLowerCase(), theUser);
+  /**
+   * Adds a user to myUsers
+   * @param theUser
+   * @return true if a user was successfully added to myUsers, false otherwise
+   */
+  public boolean addUser(final AbstractUser theUser) {
+    if (myUsers.keySet().contains(theUser.getUsername().toLowerCase())) {
+      System.out.println("Username already exists.");
+    } else {
+      myUsers.put(theUser.getUsername().toLowerCase(), theUser);
+      return true;
+    }
+    return false;
   }
 
   public void removeAuction(final Auction theAuction) {
-    myAuctions.get(theAuction.getStartDate().getMonthValue()).remove(theAuction);
+    if (LocalDateTime.now().isAfter(theAuction.getStartDate())
+            && LocalDateTime.now().isBefore(theAuction.getEndDate())) {
+      System.out.println("The auction is currently in progress.");
+    } else {
+      myAuctions.get(theAuction.getStartDate().getMonthValue()).remove(theAuction);
+      System.out.println("Successfully removed auction.");
+    }
   }
 
   /**
@@ -150,6 +163,6 @@ public class AuctionCalendar implements Serializable {
   }
 
   private void removeUser(final String theUsername) {
-//    if (myUserList.contains())
+//    if (myUsers.contains())
   }
 }
