@@ -6,6 +6,8 @@ import users.Bidder;
 import users.NonProfitOrganization;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -54,10 +56,11 @@ public class AuctionCentral {
 
     myCalendar = loadAuctionCalendar(DATABASE_PATH);
     if (myCalendar == null) {
+      myCalendar = new AuctionCalendar();
       System.out.println("Testing Use");
       setupUsers(myCalendar);
       System.out.println("Creating new ac file");
-      myCalendar = new AuctionCalendar();
+
     }
 
 		
@@ -97,35 +100,40 @@ public class AuctionCentral {
             System.out.println(LOGIN_ERROR_MESSAGE);
         }
 
-        if (userOption != 3) {
-          try {
-            System.out.println(LOGIN_SUCCESSFUL_MESSAGE + currentUser.getUsername() + "\n");
-          } catch (NullPointerException theException) {
-            System.out.println("No currentUser, is null");
-          }
-          //userType = currentUser.getUserType();
+        try {
+          System.out.println(LOGIN_SUCCESSFUL_MESSAGE + currentUser.getUsername() + "\n");
+        } catch (NullPointerException theException) {
+          //System.out.println("No currentUser, is null");
+        }
+      }
 
-          //Print the options for the current user type.
-          System.out.println(NEXT_ACTION_MESSAGE);
+      if (userOption != 3) {
 
-          //show the options of the current user, different for each subclass.
-          currentUser.showOptions();
-          System.out.println("[L] Log out");
-          //prompt for user input
-          userOption = chooseOption();
+        //userType = currentUser.getUserType();
 
-          if (userOption == -1) {
-            System.out.println("Logging out\n");
-            userOption = -2; //quick fix. Not optimal
-            currentUser = null;
-          } else {
-            //carry out action depending on user type
-            currentUser.doAction(userOption, myCalendar);
+        //Print the options for the current user type.
+        System.out.println(NEXT_ACTION_MESSAGE);
+
+        //show the options of the current user, different for each subclass.
+        currentUser.showOptions();
+        System.out.println("[L] Log out");
+        //prompt for user input
+        userOption = chooseOption();
+
+        if (userOption == -1) {
+          System.out.println("Logging out\n");
+          userOption = -2; //quick fix. Not optimal
+          currentUser = null;
+        } else {
+          //carry out action depending on user type
+          currentUser.doAction(userOption, myCalendar);
+          System.out.println("Action complete");
+          System.out.println(userOption);
+          userOption = 0;
 //        switch(currentUser.getUserType()) {
 //          case 1:
 //            doACEAction(userOption);
 //        }
-          }
         }
       }
     } while (userOption != 3);
@@ -252,7 +260,7 @@ public class AuctionCentral {
       in.close();
       fileIn.close();
     } catch (IOException ioException) {
-      System.out.println("Load database IO Exception.");
+      System.out.println("Database not found, using default.");
       //ioException.printStackTrace();
     } catch (ClassNotFoundException cnfException) {
       System.out.println("AuctionCalendar class not found.");
@@ -268,6 +276,7 @@ public class AuctionCentral {
     if (!file.exists()) {
       try {
         file.createNewFile();
+        System.out.println("Created file.");
       } catch (IOException ioException) {
         System.out.println("Error, file note created");
       }

@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -34,6 +35,14 @@ public class AuctionCalendar implements Serializable {
   }
 
   public void addAuction(final Auction theAuction) {
+
+    if (!myAuctions.containsKey(theAuction.getStartDate().getMonthValue())) {
+      ArrayList<Auction> newList = new ArrayList<Auction>();
+
+      myAuctions.put(theAuction.getStartDate().getMonthValue(), newList);
+      //debug statement
+      //System.out.println("list created.");
+    }
 
     //user a flag, that way we can tell them everything that they need to fix
     //in order to schedule their auction. If nothing is wrong, the auction is scheduled.

@@ -53,34 +53,36 @@ public class NonProfitOrganization extends AbstractUser {//implements Options {
       System.out.println("You do not have an auction to schedule, please create one first.");
       createAuction();
     }
-    if (!theCalendar.getMyAuctions().containsKey(myAuction.getStartDate().getMonth())) {
-      ArrayList<Auction> newList = new ArrayList<Auction>();
+//    if (!theCalendar.getMyAuctions().containsKey(myAuction.getStartDate().getMonth())) {
+//      ArrayList<Auction> newList = new ArrayList<Auction>();
+//
+//      theCalendar.getMyAuctions().put(myAuction.getStartDate().getMonthValue(), newList);
+//      //debug statement
+//      //System.out.println("list created.");
+//    }
+//
+//    //BR no more than 2 per day implemented here
+//    //for each option of the same month, check day, no more than 2
+//    boolean createOkay = true;
+//    int count = 0;
+//    for (Auction auction : theCalendar.getMyAuctions().get(myAuction.getStartDate().getMonthValue())) {
+//      if (auction.getStartDate().getDayOfMonth() == myAuction.getStartDate().getDayOfMonth()) {
+//        count++;
+//      }
+//      if (count > 1) {
+//        System.out.println("No more auctions can be scheduled on that day");
+//        createOkay = false;
+//        break;
+//      }
+//    }
+//    if (createOkay) {
+//      //theCalendar.getMyAuctions().get(myAuction.getStartDate().getMonthValue()).add(myAuction);
+//      theCalendar.addAuction(myAuction);
+//    }
+//
+//    isScheduled = true;
 
-      theCalendar.getMyAuctions().put(myAuction.getStartDate().getMonthValue(), newList);
-      //debug statement
-      //System.out.println("list created.");
-    }
-
-    //BR no more than 2 per day implemented here
-    //for each option of the same month, check day, no more than 2
-    boolean createOkay = true;
-    int count = 0;
-    for (Auction auction : theCalendar.getMyAuctions().get(myAuction.getStartDate().getMonthValue())) {
-      if (auction.getStartDate().getDayOfMonth() == myAuction.getStartDate().getDayOfMonth()) {
-        count++;
-      }
-      if (count > 1) {
-        System.out.println("No more auctions can be scheduled on that day");
-        createOkay = false;
-        break;
-      }
-    }
-    if (createOkay) {
-      //theCalendar.getMyAuctions().get(myAuction.getStartDate().getMonthValue()).add(myAuction);
-      theCalendar.addAuction(myAuction);
-    }
-
-    isScheduled = true;
+    theCalendar.addAuction(myAuction);
 
 	}
 
