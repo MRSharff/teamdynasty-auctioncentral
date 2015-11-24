@@ -32,7 +32,7 @@ public class ItemTest {
 	@Before
 	public void setup() throws Exception {
 		testItem = new Item("Pokemon Cards", 5);
-		testBidder = new Bidder("Chris", new DisplayCalendar()); 
+		testBidder = new Bidder("Chris"); 
 		testBid = new Bid(testItem, 250.0, testBidder.getUsername());
 		testItem1 = new Item("PS4", 9);
 		testItem2 = new Item("iPhone 6", 2);
