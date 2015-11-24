@@ -64,8 +64,8 @@ public class ItemTest {
 	public void testGetStartingBidAmount() {
 		assertEquals(250.0, testBid.getBidAmount(), 0.0001);
 	}
-    @Test
-    public void testsetMyMinStartBid() {
+        @Test
+        public void testsetMyMinStartBid() {
     	testBid.setBidAmount(350.0);
 		assertEquals(350.0, testBid.getBidAmount(), 0.0001);
     }
