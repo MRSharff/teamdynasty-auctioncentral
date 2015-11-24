@@ -8,7 +8,7 @@ import org.junit.Test;
 import model.AuctionCalendar;
 import model.Auction;
 import model.Bid;
-import model Bidder;
+import model.Bidder;
 import model.Item;
 import users.NonProfitOrganization;
 import users.ACEmployee;
