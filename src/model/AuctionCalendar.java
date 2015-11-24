@@ -52,7 +52,7 @@ public class AuctionCalendar implements Serializable {
       bRPass = false;
     }
     if (maxAuctionsInOneDay(theAuction)) {
-        System.out.println("Too many auctions on that day, please reschedule.");
+      System.out.println("Too many auctions on that day, please reschedule.");
       bRPass = false;
     }
     if (!isWithinMaxDaysOut(theAuction)) {
@@ -61,7 +61,7 @@ public class AuctionCalendar implements Serializable {
       bRPass = false;
     }
 
-    if (bRPass){
+    if (bRPass) {
       myAuctions.get(theAuction.getStartDate().getMonthValue()).add(theAuction);
       System.out.println(theAuction.getMyName() + " scheduled for "
               + theAuction.getStartDate().getHour() + ":" + theAuction.getStartDate().getMinute());
@@ -74,6 +74,7 @@ public class AuctionCalendar implements Serializable {
 
   /**
    * Adds a user to myUsers
+   *
    * @param theUser
    * @return true if a user was successfully added to myUsers, false otherwise
    */
@@ -99,6 +100,7 @@ public class AuctionCalendar implements Serializable {
 
   /**
    * BR 1
+   *
    * @return
    */
   public boolean hasMaxAuctions() {
@@ -111,6 +113,7 @@ public class AuctionCalendar implements Serializable {
 
   /**
    * BR 2
+   *
    * @param theAuction
    * @return
    */
@@ -123,6 +126,7 @@ public class AuctionCalendar implements Serializable {
 
   /**
    * BR 3.
+   *
    * @param otherAuction
    * @return
    */
@@ -159,9 +163,11 @@ public class AuctionCalendar implements Serializable {
     return (count > 1);
   }
 
-  /**BR 4 part 2
-   *
+  /**
+   * BR 4 part 2
+   * <p>
    * Rule: firstAuction is an auction that is before secondAuction
+   *
    * @param firstAuction
    * @param secondAuction
    * @return true if secondAuction start time is within a set amount of hours after firstAuction
