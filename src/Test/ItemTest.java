@@ -40,8 +40,8 @@ public class ItemTest {
 	@Test
 	public testBid() {
 	    System.out.println("Testing the Constructor of Bid of Item Class");
-		Bid bid = new Bid(new Item("Pokemon Cards", 5, 250.0, "Chris");
-		assertEquals(testBid, bid);
+	    Bid bid = new Bid(new Item("Pokemon Cards", 5, 250.0, "Chris");
+	    assertEquals(testBid, bid);
 	    System.out.println("Constructor of Bid  in Item Class Passed the test Successfully");
 	}
 
@@ -52,12 +52,12 @@ public class ItemTest {
 	}
 	@Test
 	public void testgetQuantity() {
-		assertEquals(myItem1.getQuantity(), 9);
-		assertEquals(myItem2.getQuantity(), 2);	
+		assertEquals(testItem1.getQuantity(), 9);
+		assertEquals(testItem2.getQuantity(), 2);	
 	}
 	@Test
 	public void testsetQuantity() {
-		myItem2.setQuantity(3);
+		testItem2.setQuantity(3);
 		assertEquals(myItem2.getQuantity(), 3);
 	}
 	@Test
