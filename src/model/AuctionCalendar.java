@@ -86,7 +86,7 @@ public class AuctionCalendar implements Serializable {
 
       myAuctions.put(theAuction.getStartDate().getMonthValue(), newList);
     }
-    
+
     boolean bRPass = true;
     if (hasMaxAuctions()) {
       System.out.println("Maximum auctions reached, no more auctions can be scheduled.");
@@ -202,7 +202,8 @@ public class AuctionCalendar implements Serializable {
     int count = 0;
     for (Integer key : myAuctions.keySet()) {
       for (Auction auction : myAuctions.get(key)) {
-        if (auction.getStartDate().minusDays(MAX_ROLLING_DAYS).isBefore(otherAuction.getEndDate()) || auction.getEndDate().plusDays(MAX_ROLLING_DAYS).isAfter(otherAuction.getStartDate())) {
+        if (auction.getStartDate().minusDays(MAX_ROLLING_DAYS).isBefore(otherAuction.getEndDate())
+                || auction.getEndDate().plusDays(MAX_ROLLING_DAYS).isAfter(otherAuction.getStartDate())) {
           count++;
         }
       }
