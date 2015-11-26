@@ -215,7 +215,7 @@ public class NonProfitOrganization extends AbstractUser {//implements Options {
     while (option != -1) {
       System.out.println("Choose what you would like to edit: ");
       item.listOptions();
-      System.out.println("Or -1 to go back");
+      System.out.println("[-1] Go back");
 
       option = userOption.nextInt();
       userOption.nextLine();
