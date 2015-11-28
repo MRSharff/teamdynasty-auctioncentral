@@ -1,4 +1,9 @@
-package test;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Test;
 
 import static org.junit.Assert.*;
 
@@ -8,7 +13,9 @@ import org.junit.Test;
 import model.AuctionCalendar;
 import model.Auction;
 import model.Bid;
-import model.Bidder;
+//this is in users package
+//import model.Bidder;
+import users.Bidder;
 import model.Item;
 import users.NonProfitOrganization;
 import users.ACEmployee;
@@ -31,17 +38,24 @@ public class ItemTest {
 	private Item testItem2;
 	@Before
 	public void setup() throws Exception {
-		testItem = new Item("Pokemon Cards", 5);
+                //needs starting bid amt
+		testItem = new Item("Pokemon Cards", 5, 100.0);
 		testBidder = new Bidder("Chris"); 
-		testBid = new Bid(testItem, 250.0, testBidder.getUsername());
-		testItem1 = new Item("PS4", 9);
-		testItem2 = new Item("iPhone 6", 2);
+		//testBid = new Bid(testItem, 250.0, testBidder.getUsername()); //Bid constructor requires amount and Bidder object
+		testBid = new Bid(120.0, testBidder);
+                //needs starting bid amt
+                testItem1 = new Item("PS4", 9, 400.0);
+		testItem2 = new Item("iPhone 6", 2, 500.0);
 	}
 	@Test
-	public testBid() {
+        //need return type
+	public void testBid() {
 	    System.out.println("Testing the Constructor of Bid of Item Class");
-	    Bid bid = new Bid(new Item("Pokemon Cards", 5, 250.0, "Chris");
-	    assertEquals(testBid, bid);
+	    Bid bid = new Bid(120.0, new Bidder("Chris"));
+            //test the amounts
+	    assertEquals(testBid.getAmount(), bid.getAmount(), 0.0001);
+            //test the users
+            assertEquals(testBid.getOwner().getUsername(), bid.getOwner().getUsername());
 	    System.out.println("Constructor of Bid  in Item Class Passed the test Successfully");
 	}
 
@@ -62,13 +76,24 @@ public class ItemTest {
 	}
 	@Test
 	public void testGetStartingBidAmount() {
-		assertEquals(250.0, testBid.getBidAmount(), 0.0001);
+                //change this to 120 since the starting bid for testBid is 120
+		assertEquals(120.0, testBid.getAmount(), 0.0001);
 	}
         @Test
         public void testsetMyMinStartBid() {
-    	        testBid.setBidAmount(350.0);
-		assertEquals(350.0, testBid.getBidAmount(), 0.0001);
+    	        testBid.setAmount(350.0);
+		assertEquals(350.0, testBid.getAmount(), 0.0001);
     }
+        
+        public static void main(String[] args) throws Exception {
+            ItemTest it = new ItemTest();
+            it.setup();
+            it.testBid();
+            it.testgetName();
+            it.testgetQuantity();
+            it.testGetStartingBidAmount();
+            it.testsetMyMinStartBid();
+        }
 	
 	
 }
