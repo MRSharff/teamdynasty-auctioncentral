@@ -2,8 +2,12 @@ package com.teamdynasty.view;
 
 import com.teamdynasty.model.*;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.text.DateFormatSymbols;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -36,9 +40,7 @@ public class AuctionCentralConsoleIO {
   private static final int HOUR_OFFSET = 12;
 
   //Options lists
-  /**
-   * Login options
-   */
+  /**Login options */
   private static String[] LOGIN_OPS = {"Login",
           "Create Account",
           "Save and Exit"};
@@ -146,7 +148,7 @@ public class AuctionCentralConsoleIO {
 
     do {
       System.out.println(CHOOSE_OPTION_MSG);
-      printOptionList(USER_OPTIONS[currentUser.getUserType() - 1]);
+      printOptionList(USER_OPTIONS[currentUser.getUserType()-1]);
       userChoice = userInput.nextInt();
       switch (userChoice) {
         case 1:
@@ -156,7 +158,7 @@ public class AuctionCentralConsoleIO {
           viewAuctionDetails(myCalendar);
           break;
       }
-    } while (userChoice != USER_OPTIONS[currentUser.getUserType() - 1].length);
+    } while (userChoice != USER_OPTIONS[currentUser.getUserType()-1].length);
   }
 
   private static void NPOptions() {
@@ -164,7 +166,7 @@ public class AuctionCentralConsoleIO {
 
     do {
       System.out.println(CHOOSE_OPTION_MSG);
-      printOptionList(USER_OPTIONS[currentUser.getUserType() - 1]);
+      printOptionList(USER_OPTIONS[currentUser.getUserType()-1]);
       userChoice = userInput.nextInt();
       switch (userChoice) {
         case 1:
@@ -183,7 +185,7 @@ public class AuctionCentralConsoleIO {
           editInventoryItem();
           break;
       }
-    } while (userChoice != USER_OPTIONS[currentUser.getUserType() - 1].length);
+    } while (userChoice != USER_OPTIONS[currentUser.getUserType()-1].length);
   }
 
   //Bidder methods
@@ -192,7 +194,7 @@ public class AuctionCentralConsoleIO {
 
     do {
       System.out.println(CHOOSE_OPTION_MSG);
-      printOptionList(USER_OPTIONS[currentUser.getUserType() - 1]);
+      printOptionList(USER_OPTIONS[currentUser.getUserType()-1]);
       userChoice = userInput.nextInt();
       switch (userChoice) {
         case 1:
@@ -205,12 +207,16 @@ public class AuctionCentralConsoleIO {
           bidderChangeBid();
           break;
       }
-    } while (userChoice != USER_OPTIONS[currentUser.getUserType() - 1].length);
+    } while (userChoice != USER_OPTIONS[currentUser.getUserType()-1].length);
   }
 
   private static void bidderChooseAuction() {
     System.out.println("Choose a Non-Profit: ");
+
+    //this way produces an error
     //NonProfitOrganization[] nonProfitList = (NonProfitOrganization[]) myCalendar.getNPOList().toArray();
+
+
     printOptionList(myCalendar.getNPOList().toArray());
     int npoIndex = userInput.nextInt();
 
@@ -285,6 +291,10 @@ public class AuctionCentralConsoleIO {
 
     Item item = auction.getInventory().get(userOption - 1);
 
+    bidderBidPrompt(item);
+  }
+
+  public static void bidderBidPrompt(Item theItem) {
     double bidAmount = 0;
     System.out.print("Enter Bid Amount: ");
     if (userInput.hasNextDouble()) {
@@ -294,9 +304,9 @@ public class AuctionCentralConsoleIO {
       userInput.nextLine();
     }
 
-    boolean madeBid = item.addBid(currentUser.getUsername(), bidAmount);
+    boolean madeBid = theItem.addBid(currentUser.getUsername(), bidAmount);
     if (madeBid) {
-      System.out.println("Bid $" + String.format("%.2f", bidAmount) + " on " + item.getName());
+      System.out.println("Bid $" + String.format("%.2f", bidAmount) + " on " + theItem.getName());
       System.out.println();
     } else {
       System.out.println("You must enter a higher bid.");
@@ -304,7 +314,27 @@ public class AuctionCentralConsoleIO {
   }
 
   public static void bidderChangeBid() {
+    System.out.println("Choose a Non-Profit: ");
+    //NonProfitOrganization[] nonProfitList = (NonProfitOrganization[]) myCalendar.getNPOList().toArray();
+    printOptionList(myCalendar.getNPOList().toArray());
+    int userOption = userInput.nextInt();
+    userInput.nextLine();
 
+    Auction auction = myCalendar.getNPOAuction(myCalendar.getNPOList().get(userOption - 1));
+
+    System.out.println("Choose an item to change bid on: ");
+    printOptionList(auction.getInventory().toArray());
+
+    userOption = userInput.nextInt();
+    userInput.nextLine();
+
+    Item item = auction.getInventory().get(userOption - 1);
+
+    if (item.getBids().keySet().contains(currentUser.getUsername())) {
+      bidderBidPrompt(item);
+    } else {
+      System.out.println("You do not have any bids on this item");
+    }
   }
 
   //End Bidder Methods
@@ -329,26 +359,26 @@ public class AuctionCentralConsoleIO {
       printOptionList(ITEM_OPTIONS);
       option = userInput.nextInt();
       userInput.nextLine();
-
-      switch (option) {
-        case 1:
-          System.out.print("Enter new name: ");
-          item.setName(userInput.nextLine());
-          break;
-        case 2:
-          System.out.print("Enter new quantity: ");
-          item.setQuantity(userInput.nextInt());
-          userInput.nextLine();
-          break;
-        case 3:
-          System.out.print("Enter new minimum starting bid: ");
-          item.setMyMinStartBid(userInput.nextDouble());
-          userInput.nextLine();
-          break;
-        case 4:
-          break;
-        default:
-          System.out.println("Unrecognized Input");
+      if (option == ITEM_OPTIONS.length) {
+        switch (option) {
+          case 1:
+            System.out.print("Enter new name: ");
+            item.setName(userInput.nextLine());
+            break;
+          case 2:
+            System.out.print("Enter new quantity: ");
+            item.setQuantity(userInput.nextInt());
+            userInput.nextLine();
+            break;
+          case 3:
+            System.out.print("Enter new minimum starting bid: ");
+            item.setMyMinStartBid(userInput.nextDouble());
+            userInput.nextLine();
+            break;
+          default:
+            System.out.println("Unrecognized Input");
+            break;
+        }
       }
     } while (option != ITEM_OPTIONS.length);
   }
@@ -386,7 +416,7 @@ public class AuctionCentralConsoleIO {
     listNPOInventoryItems(theUser);
     int itemNumber = userInput.nextInt();
 
-    if (itemNumber > 0 && itemNumber <= theUser.getMyAuction().getInventory().size()) {
+    if (itemNumber > 0 && itemNumber <= theUser.getMyAuction().getInventory().size()){
       theUser.getMyAuction().removeItem(itemNumber - 1);
     } else {
       System.out.println(INPUT_ERROR_MSG);
@@ -439,6 +469,7 @@ public class AuctionCentralConsoleIO {
       System.out.println("[" + counter + "] " + item.getName() + " (Minimum bid: $" + item.getMyMinStartBid() + ")");
       counter++;
     }
+    System.out.println("[" + counter + "] " + "Back");
   }
 
   public static void createNewInventoryItem() {
@@ -476,7 +507,7 @@ public class AuctionCentralConsoleIO {
 
     int auctionNumber = userInput.nextInt();
 
-    Auction auction = theCalendar.getMyAuctions().get(month).get(auctionNumber - 1);
+    Auction auction = theCalendar.getMyAuctions().get(month).get(auctionNumber-1);
 
     List<Item> itemList = auction.getInventory();
 
@@ -565,14 +596,14 @@ public class AuctionCentralConsoleIO {
   }
 
   private static void viewMonth(int theMonth, HashMap<Integer, List<Auction>> theAuctionList, boolean numbered) {
-    List<Auction> currentMonthList = theAuctionList.get(theMonth);
+    List < Auction > currentMonthList = theAuctionList.get(theMonth);
 
     if (currentMonthList != null && !currentMonthList.isEmpty()) {
 
       Collections.sort(currentMonthList);
       int count = 1;
       System.out.println("Auctions for the Month of " + new DateFormatSymbols().getMonths()[theMonth - 1]);
-      for (Auction auction : currentMonthList) {
+      for (Auction auction: currentMonthList) {
         //view all future auctions and auctions that have ended within MAX_DAYS_AFTER_AUCTION_END
         if (auction.getStartDate().isAfter(LocalDateTime.now().minusDays(MAX_DAYS_AFTER_AUCTION_END))) {
           String printer = "";
@@ -720,10 +751,12 @@ public class AuctionCentralConsoleIO {
     NonProfitOrganization newNPO2 = new NonProfitOrganization("NPOTest2", "Second Organization");
 
 
+
     theCalendar.getMyUsers().put(newACEmployee.getUsername().toLowerCase(), newACEmployee);
     theCalendar.getMyUsers().put(newBidder.getUsername().toLowerCase(), newBidder);
-    theCalendar.getMyUsers().put(newNPO.getUsername().toLowerCase(), newNPO);
-    theCalendar.getMyUsers().put(newNPO2.getUsername().toLowerCase(), newNPO2);
+    theCalendar.getMyUsers().put(newNPO.getUsername().toLowerCase(),newNPO);
+    theCalendar.getMyUsers().put(newNPO2.getUsername().toLowerCase(),newNPO2);
+
 
 
   }
