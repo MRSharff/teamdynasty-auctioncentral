@@ -1,9 +1,6 @@
-package model;
+package com.teamdynasty.model;
 
-import users.AbstractUser;
-
-import java.io.Serializable;
-import java.time.LocalDate;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -26,7 +23,7 @@ import java.util.List;
  * @author Shoba Gopi
  * @version 2.1
  * @author Mat Sharff
- * @see AbstractUser
+ * @see User
  */
 public class AuctionCalendar implements Serializable {
 
@@ -38,7 +35,7 @@ public class AuctionCalendar implements Serializable {
   private static final int MINIMUM_HOURS_BETWEEN = 2;
 
   private HashMap<Integer, List<Auction>> myAuctions;
-  private HashMap<String, AbstractUser> myUsers;
+  private HashMap<String, User> myUsers;
 
   /**
    * The Constructor of Auction Calendar Class.
@@ -47,7 +44,7 @@ public class AuctionCalendar implements Serializable {
    */
   public AuctionCalendar() {
     myAuctions = new HashMap<Integer, List<Auction>>(TOTAL_MONTHS);
-    myUsers = new HashMap<String, AbstractUser>();
+    myUsers = new HashMap<String, User>();
   }
 
   /**
@@ -66,7 +63,7 @@ public class AuctionCalendar implements Serializable {
    * @return the user list hash map with username as its keys.
    * @see Auction
    */
-  public HashMap<String, AbstractUser> getMyUsers() {
+  public HashMap<String, User> getMyUsers() {
     return myUsers;
   }
 
@@ -89,22 +86,22 @@ public class AuctionCalendar implements Serializable {
 
     boolean bRPass = true;
     if (hasMaxAuctions()) {
-      System.out.println("Maximum auctions reached, no more auctions can be scheduled.");
+      //System.out.println("Maximum auctions reached, no more auctions can be scheduled.");
       bRPass = false;
     }
     if (maxAuctionsInOneDay(theAuction)) {
-      System.out.println("Too many auctions on that day, please reschedule.");
+      //System.out.println("Too many auctions on that day, please reschedule.");
       bRPass = false;
     }
     if (!isWithinMaxDaysOut(theAuction)) {
-      System.out.println("You must schedule your auction at a date within " + MAX_DAYS_OUT + " days.");
-      System.out.println("Please change your auction date to no later than " + LocalDate.now().plusDays(MAX_DAYS_OUT));
+      //System.out.println("You must schedule your auction at a date within " + MAX_DAYS_OUT + " days.");
+      //System.out.println("Please change your auction date to no later than " + LocalDate.now().plusDays(MAX_DAYS_OUT));
       bRPass = false;
     }
 
     if (bRPass) {
       myAuctions.get(theAuction.getStartDate().getMonthValue()).add(theAuction);
-      System.out.println(theAuction.getMyName() + " scheduled for " + theAuction.getStartDate().getHour() + ":" + theAuction.getStartDate().getMinute());
+      //.out.println(theAuction.getMyName() + " scheduled for " + theAuction.getStartDate().getHour() + ":" + theAuction.getStartDate().getMinute());
     }
   }
 
@@ -120,13 +117,13 @@ public class AuctionCalendar implements Serializable {
   public void removeAuction(final Auction theAuction) {
 
     if (LocalDateTime.now().isAfter(theAuction.getStartDate()) && LocalDateTime.now().isBefore(theAuction.getEndDate())) {
-      System.out.println("The auction is currently in progress.");
+      //System.out.println("The auction is currently in progress.");
     } else if (!myAuctions.get(theAuction.getStartDate().getMonthValue()).isEmpty()) {
 
       myAuctions.get(theAuction.getStartDate().getMonthValue()).remove(theAuction);
-      System.out.println("Successfully removed auction.");
+      //System.out.println("Successfully removed auction.");
     } else {
-      System.out.println("No Such Auction Present in the Auction Calendar.");
+      //System.out.println("No Such Auction Present in the Auction Calendar.");
     }
   }
 
@@ -140,9 +137,9 @@ public class AuctionCalendar implements Serializable {
    *                and will be added to the auction calendar.
    * @return         <code>true</code> if the user is successfully added to the user list;
    * <code>false</code> otherwise.
-   * @see AbstractUser
+   * @see User
    */
-  public boolean addUser(final AbstractUser theUser) {
+  public boolean addUser(final User theUser) {
 
     if (myUsers.keySet().contains(theUser.getUsername().toLowerCase())) {
       System.out.println("Username already exists.");
@@ -251,5 +248,91 @@ public class AuctionCalendar implements Serializable {
   private boolean auctionStartTooSoon(final Auction firstAuction, final Auction secondAuction) {
     return (ChronoUnit.HOURS.between(firstAuction.getEndDate(), secondAuction.getStartDate()) < MINIMUM_HOURS_BETWEEN
             || ChronoUnit.HOURS.between(secondAuction.getEndDate(), firstAuction.getStartDate()) < MINIMUM_HOURS_BETWEEN);
+  }
+
+
+  public List<NonProfitOrganization> getNPOList() {
+    List<NonProfitOrganization> NPOList = new ArrayList<NonProfitOrganization>();
+
+    //int counter = 1;
+    for (User user : myUsers.values()) {
+      if (user.getUserType() == User.INPO) {
+        NPOList.add((NonProfitOrganization) user);
+        //System.out.println("[" + counter + "] " + user.getUsername());
+        //counter++;
+      }
+    }
+
+    return NPOList;
+  }
+
+  public NonProfitOrganization chooseNPO(int theIndex) {
+    return getNPOList().get(theIndex);
+  }
+
+  public Auction getNPOAuction(NonProfitOrganization theNPO) {
+    return theNPO.getMyAuction();
+  }
+//  private static NonProfitOrganization listNPO(HashMap<String, User> theUserList) {
+//    List<NonProfitOrganization> NPOList = new ArrayList<NonProfitOrganization>();
+//
+//
+//    System.out.println("Choose a Non-Profit Organization");
+//    //fill list of NPOs to show and print them
+//    int counter = 1;
+//    for (User user : theUserList.values()) {
+//      if (user.getUserType() == AuctionCentral.INPO) {
+//        NPOList.add((NonProfitOrganization) user);
+//        System.out.println("[" + counter + "] " + user.getUsername());
+//        counter++;
+//      }
+//    }
+//
+//    int option = userInput.nextInt();
+//    userInput.nextLine();
+//    System.out.println("You chose " + NPOList.get(option - 1).getMyOrgName() + "'s Auction, "
+//            + NPOList.get(option - 1).getMyAuction().getMyName());
+//    return NPOList.get(option - 1);
+//  }
+
+  public void save(final String thePath) throws IOException {
+    File file = new File(thePath);
+
+    //if there is no file by found in DATABASE_PATH, create one
+    if (!file.exists()) {
+      file.getParentFile().mkdir();
+    }
+
+    //write serialized file
+    try {
+      FileOutputStream fileOut = new FileOutputStream(thePath);
+      ObjectOutputStream out = new ObjectOutputStream(fileOut);
+      out.writeObject(this);
+      out.close();
+      fileOut.close();
+    } catch (IOException theException) {
+      theException.printStackTrace();
+    }
+  }
+
+  public static AuctionCalendar load(final String thePath) {
+    AuctionCalendar temp = null;
+
+    File file = new File(thePath);
+    if (!file.exists()) {
+      return null;
+    }
+    try {
+      FileInputStream fileIn = new FileInputStream(thePath);
+      ObjectInputStream in = new ObjectInputStream(fileIn);
+      temp = (AuctionCalendar) in.readObject();
+      in.close();
+      fileIn.close();
+    } catch (IOException | ClassNotFoundException ioException) {
+      //ioException.printStackTrace();
+    }
+//    this.myUsers = temp.myUsers;
+//    this.myAuctions = temp.myAuctions;
+    return temp;
   }
 }
