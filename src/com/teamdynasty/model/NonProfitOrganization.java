@@ -55,6 +55,10 @@ public class NonProfitOrganization extends User {
     return myAuction;
   }
 
+  public void removeAuction() {
+    myAuction = null;
+  }
+
   public List<Item> getMyInventory() {
     return myInventory;
   }

@@ -37,35 +37,41 @@ public class AuctionCentralConsoleIO {
 
   private static final String INPUT_ERROR_MSG = "Incorrect Input";
 
+  private static final String NO_AUCTION_MSG = "You do not have an auction";
+
   private static final int HOUR_OFFSET = 12;
 
   //Options lists
   /**Login options */
   private static String[] LOGIN_OPS = {"Login",
-          "Create Account",
-          "Save and Exit"};
+          "Create Account"};
 
   private static final String[][] USER_OPTIONS = {
           //ACEmployee Options
           {"View Monthly Calendar",
-                  "View details of auction",
-                  "Logout"},
+                  "View details of auction"},
           //NPO Options
           {"Schedule Auction",
                   "Create Auction",
                   "Edit Auction",
                   "Create New Inventory Item",
-                  "Edit Inventory Item",
-                  "Logout"},
+                  "Edit Inventory Item"},
           //Bidder Options
           {"Choose a Non-profit Organization to View their Auction",
                   "Bid on Item",
-                  "Change Bid",
-                  "Logout"}};
+                  "Change Bid"}};
 
-  private static final String[] AUCTION_OPTIONS = {"Change date", "Add item", "Remove item", "Back"};
+  private static final String LOGOUT_OPTION = "Log Out";
 
-  private static final String[] ITEM_OPTIONS = {"Name", "Quantity", "Minimum Starting Bid", "Back"};
+  private static final String BACK_OPTION = "Back";
+
+  private static final String CANCEL_OPTION = "Cancel";
+
+  private static final String EXIT_OPTION = "Save and Exit";
+
+  private static final String[] AUCTION_OPTIONS = {"Change date", "Add item", "Remove item"};
+
+  private static final String[] ITEM_OPTIONS = {"Name", "Quantity", "Minimum Starting Bid"};
 
   private static final String[] ADD_ITEM_OPTIONS = {"Add item from inventory", "Create new item to add"};
 
@@ -91,24 +97,26 @@ public class AuctionCentralConsoleIO {
     System.out.println(WELCOME_MSG);
     do {
       System.out.println(CHOOSE_OPTION_MSG);
-      printOptionList(LOGIN_OPS);
+      printOptionList(LOGIN_OPS, EXIT_OPTION);
       myChoice = userInput.nextInt();
       userInput.nextLine();
-      switch (myChoice) {
-        case 1:
-          userLogin();
-          break;
-        case 2:
-          createNewUser();
-          break;
-        case 3:
-          save(DATABASE_PATH);
-          return;
-        default: //if they don't choose any of the options, then print an error message
-          System.out.println(LOGIN_ERROR_MESSAGE);
-      }
+      if (myChoice == LOGIN_OPS.length + 1) {
+        save(DATABASE_PATH);
+        break;
+      } else {
+        switch (myChoice) {
+          case 1:
+            userLogin();
+            break;
+          case 2:
+            createNewUser();
+            break;
+          default: //if they don't choose any of the options, then print an error message
+            System.out.println(LOGIN_ERROR_MESSAGE);
+        }
 
-      userMenu();
+        userMenu();
+      }
     } while (currentUser == null);
   }
 
@@ -148,7 +156,7 @@ public class AuctionCentralConsoleIO {
 
     do {
       System.out.println(CHOOSE_OPTION_MSG);
-      printOptionList(USER_OPTIONS[currentUser.getUserType()-1]);
+      printOptionList(USER_OPTIONS[currentUser.getUserType()-1], LOGOUT_OPTION);
       userChoice = userInput.nextInt();
       switch (userChoice) {
         case 1:
@@ -158,7 +166,7 @@ public class AuctionCentralConsoleIO {
           viewAuctionDetails(myCalendar);
           break;
       }
-    } while (userChoice != USER_OPTIONS[currentUser.getUserType()-1].length);
+    } while (userChoice != USER_OPTIONS[currentUser.getUserType()-1].length + 1);
   }
 
   private static void NPOptions() {
@@ -166,7 +174,7 @@ public class AuctionCentralConsoleIO {
 
     do {
       System.out.println(CHOOSE_OPTION_MSG);
-      printOptionList(USER_OPTIONS[currentUser.getUserType()-1]);
+      printOptionList(USER_OPTIONS[currentUser.getUserType()-1], LOGOUT_OPTION);
       userChoice = userInput.nextInt();
       switch (userChoice) {
         case 1:
@@ -185,7 +193,7 @@ public class AuctionCentralConsoleIO {
           editInventoryItem();
           break;
       }
-    } while (userChoice != USER_OPTIONS[currentUser.getUserType()-1].length);
+    } while (userChoice != USER_OPTIONS[currentUser.getUserType()-1].length + 1);
   }
 
   //Bidder methods
@@ -194,8 +202,11 @@ public class AuctionCentralConsoleIO {
 
     do {
       System.out.println(CHOOSE_OPTION_MSG);
-      printOptionList(USER_OPTIONS[currentUser.getUserType()-1]);
+      printOptionList(USER_OPTIONS[currentUser.getUserType()-1], LOGOUT_OPTION);
       userChoice = userInput.nextInt();
+      if (userChoice == USER_OPTIONS[currentUser.getUserType()-1].length + 1) {
+        System.out.println("Logging Out...");
+      }
       switch (userChoice) {
         case 1:
           bidderChooseAuction();
@@ -207,7 +218,7 @@ public class AuctionCentralConsoleIO {
           bidderChangeBid();
           break;
       }
-    } while (userChoice != USER_OPTIONS[currentUser.getUserType()-1].length);
+    } while (userChoice != USER_OPTIONS[currentUser.getUserType()-1].length + 1);
   }
 
   private static void bidderChooseAuction() {
@@ -217,13 +228,18 @@ public class AuctionCentralConsoleIO {
     //NonProfitOrganization[] nonProfitList = (NonProfitOrganization[]) myCalendar.getNPOList().toArray();
 
 
-    printOptionList(myCalendar.getNPOList().toArray());
+    printOptionList(myCalendar.getNPOList().toArray(), CANCEL_OPTION);
     int npoIndex = userInput.nextInt();
 
-    //pass in false because the bidder cannot view bids on an item.
-    printAuctionDetails(myCalendar.getNPOAuction(myCalendar.getNPOList().get(npoIndex - 1)), false);
-    //List<Item> auctionItems = myCalendar.getNPOList().get(npoIndex).getMyAuction().getInventory();
-    //System.out.println(myCalendar.getNPOList().get(npoIndex).getMyAuction().getInventory().toArray());
+    if (npoIndex == myCalendar.getNPOList().size()) {
+      System.out.println("Action canceled");
+    } else {
+
+      //pass in false because the bidder cannot view bids on an item.
+      printAuctionDetails(myCalendar.getNPOAuction(myCalendar.getNPOList().get(npoIndex - 1)), false);
+      //List<Item> auctionItems = myCalendar.getNPOList().get(npoIndex).getMyAuction().getInventory();
+      //System.out.println(myCalendar.getNPOList().get(npoIndex).getMyAuction().getInventory().toArray());
+    }
   }
 
 //  private static void listNPOs(final List<NonProfitOrganization> theList) {
@@ -277,21 +293,29 @@ public class AuctionCentralConsoleIO {
   public static void bidderBidOnItem() {
     System.out.println("Choose a Non-Profit: ");
     //NonProfitOrganization[] nonProfitList = (NonProfitOrganization[]) myCalendar.getNPOList().toArray();
-    printOptionList(myCalendar.getNPOList().toArray());
+    printOptionList(myCalendar.getNPOList().toArray(), CANCEL_OPTION);
     int userOption = userInput.nextInt();
     userInput.nextLine();
 
-    Auction auction = myCalendar.getNPOAuction(myCalendar.getNPOList().get(userOption - 1));
+    if (userOption == myCalendar.getNPOList().size()) {
+      System.out.println("Action canceled");
+    } else {
+      Auction auction = myCalendar.getNPOAuction(myCalendar.getNPOList().get(userOption - 1));
 
-    System.out.println("Choose an item to bid on: ");
-    printOptionList(auction.getInventory().toArray());
+      System.out.println("Choose an item to bid on: ");
+      printOptionList(auction.getInventory().toArray(), CANCEL_OPTION);
 
-    userOption = userInput.nextInt();
-    userInput.nextLine();
+      userOption = userInput.nextInt();
+      userInput.nextLine();
 
-    Item item = auction.getInventory().get(userOption - 1);
+      if (userOption == auction.getInventory().size()) {
+        System.out.println("Action canceled");
+      } else {
+        Item item = auction.getInventory().get(userOption - 1);
 
-    bidderBidPrompt(item);
+        bidderBidPrompt(item);
+      }
+    }
   }
 
   public static void bidderBidPrompt(Item theItem) {
@@ -316,24 +340,32 @@ public class AuctionCentralConsoleIO {
   public static void bidderChangeBid() {
     System.out.println("Choose a Non-Profit: ");
     //NonProfitOrganization[] nonProfitList = (NonProfitOrganization[]) myCalendar.getNPOList().toArray();
-    printOptionList(myCalendar.getNPOList().toArray());
+    printOptionList(myCalendar.getNPOList().toArray(), CANCEL_OPTION);
     int userOption = userInput.nextInt();
     userInput.nextLine();
 
-    Auction auction = myCalendar.getNPOAuction(myCalendar.getNPOList().get(userOption - 1));
-
-    System.out.println("Choose an item to change bid on: ");
-    printOptionList(auction.getInventory().toArray());
-
-    userOption = userInput.nextInt();
-    userInput.nextLine();
-
-    Item item = auction.getInventory().get(userOption - 1);
-
-    if (item.getBids().keySet().contains(currentUser.getUsername())) {
-      bidderBidPrompt(item);
+    if (userOption == myCalendar.getNPOList().size()) {
+      System.out.println("Action canceled");
     } else {
-      System.out.println("You do not have any bids on this item");
+      Auction auction = myCalendar.getNPOAuction(myCalendar.getNPOList().get(userOption - 1));
+
+      System.out.println("Choose an item to change bid on: ");
+      printOptionList(auction.getInventory().toArray(), CANCEL_OPTION);
+
+      userOption = userInput.nextInt();
+      userInput.nextLine();
+      if (userOption == auction.getInventory().size()) {
+        System.out.println("Action canceled");
+      } else {
+
+        Item item = auction.getInventory().get(userOption - 1);
+
+        if (item.getBids().keySet().contains(currentUser.getUsername())) {
+          bidderBidPrompt(item);
+        } else {
+          System.out.println("You do not have any bids on this item");
+        }
+      }
     }
   }
 
@@ -356,10 +388,12 @@ public class AuctionCentralConsoleIO {
 
     do {
       System.out.println("Choose what you would like to edit: ");
-      printOptionList(ITEM_OPTIONS);
+      printOptionList(ITEM_OPTIONS, CANCEL_OPTION);
       option = userInput.nextInt();
       userInput.nextLine();
-      if (option == ITEM_OPTIONS.length) {
+      if (option == ITEM_OPTIONS.length + 1) {
+        System.out.println("Action canceled");
+      } else {
         switch (option) {
           case 1:
             System.out.print("Enter new name: ");
@@ -380,35 +414,42 @@ public class AuctionCentralConsoleIO {
             break;
         }
       }
-    } while (option != ITEM_OPTIONS.length);
+    } while (option != ITEM_OPTIONS.length + 1);
   }
 
   public static void editAuction() {
     int userChoice;
     NonProfitOrganization user = (NonProfitOrganization) currentUser;
 
-
-    do {
-      System.out.println(CHOOSE_OPTION_MSG);
-      printOptionList(AUCTION_OPTIONS);
-      userChoice = userInput.nextInt();
-      switch (userChoice) {
-        case 1:
-          changeAuctionDate(user);
-          break;
-        case 2:
-          addAuctionItem(user);
-          break;
-        case 3:
-          removeAuctionItem(user);
-          break;
-        case 4:
-          break;
-        default:
-          System.out.println(INPUT_ERROR_MSG);
-      }
-    } while (userChoice != AUCTION_OPTIONS.length);
-
+    if (user.hasAuction()) {
+      printAuctionDetails(user.getMyAuction(), false);
+      do {
+        System.out.println(CHOOSE_OPTION_MSG);
+        printOptionList(AUCTION_OPTIONS, CANCEL_OPTION);
+        userChoice = userInput.nextInt();
+        if (userChoice == AUCTION_OPTIONS.length + 1) {
+          System.out.println("Action canceled");
+        } else {
+          switch (userChoice) {
+            case 1:
+              changeAuctionDate(user);
+              break;
+            case 2:
+              addAuctionItem(user);
+              break;
+            case 3:
+              removeAuctionItem(user);
+              break;
+            case 4:
+              break;
+            default:
+              System.out.println(INPUT_ERROR_MSG);
+          }
+        }
+      } while (userChoice != AUCTION_OPTIONS.length + 1);
+    } else {
+      System.out.println(NO_AUCTION_MSG);
+    }
   }
 
   public static void removeAuctionItem(NonProfitOrganization theUser) {
@@ -440,26 +481,31 @@ public class AuctionCentralConsoleIO {
 
   public static void addAuctionItem(NonProfitOrganization theUser) {
     System.out.println(CHOOSE_OPTION_MSG);
-    printOptionList(ADD_ITEM_OPTIONS);
+    printOptionList(ADD_ITEM_OPTIONS, CANCEL_OPTION);
 
     int addItemOption = userInput.nextInt();
     userInput.nextLine();
-    switch (addItemOption) {
-      case 1:
-        if (theUser.getMyInventory().isEmpty()) {
-          System.out.println("No items to edit.");
+
+    if (addItemOption == ADD_ITEM_OPTIONS.length + 1) {
+      System.out.println("Action canceled");
+    } else {
+      switch (addItemOption) {
+        case 1:
+          if (theUser.getMyInventory().isEmpty()) {
+            System.out.println("No items to add.");
+            break;
+          }
+          System.out.println("Enter item number from the list: ");
+          listNPOInventoryItems(theUser);
+          addItemOption = userInput.nextInt();
+          userInput.nextLine();
+          //-1 for list to index offset
+          theUser.getMyAuction().addItem(theUser.getMyInventory().get(addItemOption - 1));
           break;
-        }
-        System.out.println("Enter item number from the list: ");
-        listNPOInventoryItems(theUser);
-        addItemOption = userInput.nextInt();
-        userInput.nextLine();
-        //-1 for list to index offset
-        theUser.getMyAuction().addItem(theUser.getMyInventory().get(addItemOption - 1));
-        break;
-      case 2:
-        theUser.getMyAuction().getInventory().add(createItem());
-        break;
+        case 2:
+          theUser.getMyAuction().getInventory().add(createItem());
+          break;
+      }
     }
   }
 
@@ -469,7 +515,7 @@ public class AuctionCentralConsoleIO {
       System.out.println("[" + counter + "] " + item.getName() + " (Minimum bid: $" + item.getMyMinStartBid() + ")");
       counter++;
     }
-    System.out.println("[" + counter + "] " + "Back");
+    System.out.println("[" + counter + "] " + BACK_OPTION);
   }
 
   public static void createNewInventoryItem() {
@@ -714,32 +760,36 @@ public class AuctionCentralConsoleIO {
 
       int userType = getUserType();
 
-      if (userType == 2) {
-        System.out.println(ENTER_NP_MSG);
-        userInput.nextLine();
-        String npoName = userInput.nextLine();
-        newUser = new NonProfitOrganization(userName, npoName);
+      if (userType == USER_TYPES.length + 1) {
+        System.out.println("Action canceled");
       } else {
-        newUser = new User(userName, userType);
-      }
+        if (userType == 2) {
+          System.out.println(ENTER_NP_MSG);
+          userInput.nextLine();
+          String npoName = userInput.nextLine();
+          newUser = new NonProfitOrganization(userName, npoName);
+        } else {
+          newUser = new User(userName, userType);
+        }
 
-      try {
+        try {
 //        myCalendar.getMyUsers().put(userName.toLowerCase(), newUser);
-        myCalendar.addUser(newUser);
-      } catch (NullPointerException exception) {
-        System.out.println("user list was null");
+          myCalendar.addUser(newUser);
+        } catch (NullPointerException exception) {
+          System.out.println("user list was null");
+        }
       }
+
+      currentUser = newUser;
+
+      System.out.println(CREATE_USER_SUCCESS_MSG);
     }
-
-    currentUser = newUser;
-
-    System.out.println(CREATE_USER_SUCCESS_MSG);
   }
 
   private static int getUserType() {
 
     System.out.println(USER_TYPE_PROMPT_MESSAGE);
-    printOptionList(USER_TYPES);
+    printOptionList(USER_TYPES, CANCEL_OPTION);
 
     return userInput.nextInt();
   }
@@ -769,12 +819,13 @@ public class AuctionCentralConsoleIO {
 //    }
 //  }
 
-  public static void printOptionList(final Object[] theList) {
+  public static void printOptionList(final Object[] theList, final String theLastOption) {
     int counter = 1;
     for (Object option : theList) {
       System.out.println("[" + counter + "] " + option.toString());
       counter++;
     }
+    System.out.println("[" + counter + "] " + theLastOption);
   }
 
   private static void scheduleAuction() {
