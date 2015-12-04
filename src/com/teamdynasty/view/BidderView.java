@@ -8,10 +8,10 @@ import com.teamdynasty.model.User;
 import java.util.List;
 import java.util.Scanner;
 
-/**
+/**Console input and output view for dealing with Bidder users.
  * Created by Mat on 12/3/2015.
  */
-public class BidderView extends UserView {
+public class BidderView implements IUserView {
 
   public static final String[] USER_OPTIONS = {"Choose a Non-profit Organization to View their Auction",
           "Bid on Item",
@@ -41,7 +41,7 @@ public class BidderView extends UserView {
       }
       switch (userChoice) {
         case 1:
-          chooseAuction(theScanner, theCalendar, theUser);
+          chooseAuction(theScanner, theCalendar);
           break;
         case 2:
           bidOnItem(theScanner, theCalendar, theUser);
@@ -53,7 +53,7 @@ public class BidderView extends UserView {
     } while (userChoice != USER_OPTIONS.length + 1);
   }
 
-  private static void chooseAuction(Scanner theScanner, AuctionCalendar theCalendar, User theUser) {
+  private static void chooseAuction(Scanner theScanner, AuctionCalendar theCalendar) {
     int userChoice;
 
     List<NonProfit> npoList = theCalendar.getNPOList();
@@ -71,7 +71,9 @@ public class BidderView extends UserView {
         System.out.println(NO_AUCTION_MSG);
       } else {
         for (Item item : npoList.get(userChoice).getMyAuction().getInventory()) {
-          System.out.println(String.format("%s (minimum starting bid: %.2f", item.toString(), item.getMyMinStartBid()));
+          System.out.println(item.toString());
+          System.out.println(String.format("  Quantity: %d", item.getQuantity()));
+          System.out.println(String.format("  Minimum Starting Bid: %.2f", item.getMyMinStartBid()));
         }
       }
     }
@@ -113,7 +115,7 @@ public class BidderView extends UserView {
         if (userChoice == counter) {
           System.out.println(AuctionCentralMainView.ACTION_CANCELED_MSG);
         } else {
-          boolean addedBid = true;
+          boolean addedBid;
           do {
             System.out.println("Enter bid amount: ");
             double bidAmount = theScanner.nextDouble();

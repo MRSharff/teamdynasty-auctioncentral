@@ -11,10 +11,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 
-/**
+/**Console input and output view for dealing with Auction Central Employee users.
  * Created by Mat on 12/3/2015.
  */
-public class ACEmployeeView extends UserView {
+public class ACEmployeeView implements IUserView {
 
   private static final String[] USER_OPTIONS = {"View Monthly Calendar",
                                                 "View details of auction"};

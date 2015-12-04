@@ -5,10 +5,10 @@ import com.teamdynasty.model.*;
 import java.time.LocalDateTime;
 import java.util.Scanner;
 
-/**
+/**Console input and output view for dealing with NonProfit users.
  * Created by Mat on 12/3/2015.
  */
-public class NonProfitView extends UserView {
+public class NonProfitView implements IUserView {
 
   private static final String[] USER_OPTIONS = {"Schedule Auction",
                                                 "Create Auction",
@@ -63,7 +63,7 @@ public class NonProfitView extends UserView {
 
   }
 
-  private static void scheduleAuction(AuctionCalendar theCalendar, NonProfit theUser) {;
+  private static void scheduleAuction(AuctionCalendar theCalendar, NonProfit theUser) {
       if (!theUser.hasAuction()) {
         System.out.println("You do not have an auction to schedule, please create one first.");
       } else {
@@ -72,13 +72,12 @@ public class NonProfitView extends UserView {
   }
 
   private static void createAuction(Scanner theScanner, NonProfit theUser) {
-    NonProfit user = (NonProfit) theUser;
 
-    Auction newAuction = new Auction(user);
+    Auction newAuction = new Auction(theUser);
     newAuction.setStartDate(newStartDate(theScanner));
     newAuction.setEndDate(newEndDate(newAuction.getStartDate(), theScanner));
 
-    user.setMyAuction(newAuction);
+    theUser.setMyAuction(newAuction);
 
     System.out.println("Auction created: " + newAuction.getMyName() + "\n");
   }

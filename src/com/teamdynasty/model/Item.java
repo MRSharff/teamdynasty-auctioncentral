@@ -2,9 +2,9 @@ package com.teamdynasty.model;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Set;
 
-/**
+/**An Item which can be contained in a NonProfits inventory or
+ * an auctions inventory.
  * Created by Mat on 11/28/2015.
  */
 public class Item implements Serializable {
@@ -20,7 +20,7 @@ public class Item implements Serializable {
     myName = theName;
     myQuantity = theQuantity;
     myMinStartBid = theMinStartBid;
-    myBids = new HashMap<String, Double>();
+    myBids = new HashMap<>();
   }
 
   public String getName() {
@@ -71,11 +71,11 @@ public class Item implements Serializable {
     return flag;
   }
 
-  public boolean hasBidder(String theBidderName) {
-    Set<String> bidderList = myBids.keySet();
-
-    return bidderList.contains(theBidderName);
-  }
+//  public boolean hasBidder(String theBidderName) {
+//    Set<String> bidderList = myBids.keySet();
+//
+//    return bidderList.contains(theBidderName);
+//  }
 
   @Override
   public String toString() {

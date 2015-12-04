@@ -9,7 +9,6 @@ import java.util.Scanner;
 public class AuctionCentralMainView {
 
   //Constants
-  public static final long MAX_DAYS_AFTER_AUCTION_END = 1;
 
   public static final String WELCOME_MSG = "Welcome to AuctionCentral\n" +
           "-----------------";
@@ -33,42 +32,17 @@ public class AuctionCentralMainView {
 
   public static final String INPUT_ERROR_MSG = "Incorrect Input";
 
-
-
-  //Options lists
   /**Login options */
   public static String[] LOGIN_OPS = {"Login",
           "Create Account"};
 
-  public static final String[][] USER_OPTIONS = {
-          //ACEmployee Options
-          {"View Monthly Calendar",
-                  "View details of auction"},
-          //NPO Options
-          {"Schedule Auction",
-                  "Create Auction",
-                  "Edit Auction",
-                  "Create New Inventory Item",
-                  "Edit Inventory Item"},
-          //Bidder Options
-          {"Choose a Non-profit Organization to View their Auction",
-                  "Bid on Item",
-                  "Change Bid"}};
-
   public static final String LOGOUT_OPTION = "Log Out";
-
-  public static final String BACK_OPTION = "Back";
 
   public static final String CANCEL_OPTION = "Cancel";
 
   public static final String EXIT_OPTION = "Save and Exit";
 
   public static final String ACTION_CANCELED_MSG = "Action Canceled";
-
-  public static final String[] AUCTION_OPTIONS = {"Change date", "Add item", "Remove item"};
-
-
-
 
 
   public static final String[] USER_TYPES = {"Auction Central Employee",
@@ -82,7 +56,7 @@ public class AuctionCentralMainView {
   private static Scanner userInput;
   private static AuctionCalendar myCalendar;
   private static User currentUser;
-  private static UserView[] userTypeArray;
+  private static IUserView[] userTypeArray;
 
   public static void main(String[] args) {
     //load the saved database
@@ -141,7 +115,7 @@ public class AuctionCentralMainView {
     userInput = new Scanner(System.in);
     myCalendar = load(DATABASE_PATH);
     currentUser = null;
-    userTypeArray = new UserView[3];
+    userTypeArray = new IUserView[3];
     userTypeArray[0] = new ACEmployeeView();
     userTypeArray[1] = new NonProfitView();
     userTypeArray[2] = new BidderView();
@@ -218,7 +192,9 @@ public class AuctionCentralMainView {
 
   public static void printAuctionDetails(Auction theAuction) {
     StringBuilder string = new StringBuilder("Details for " + theAuction.getMyName());
-    string.append("Start Date: " + theAuction.getStartDate().toString() + "\n");
+    string.append("Start Date: ");
+    string.append(theAuction.getStartDate().toString());
+    string.append("\n");
     //returnString.append("End Date: " + myEndDate.toString() + "\n");
 
     //flag for printing bids
@@ -229,7 +205,9 @@ public class AuctionCentralMainView {
       if (canViewBids) {
         string.append("\n  Bids:\n");
         for (String bidOwner : item.getBids().keySet()) {
-          string.append("    " + bidOwner + ": $" + item.getBids().get(bidOwner) + "\n");
+//          String.format("%4s: $%.2f\n", bidOwner, item.getBids().get(bidOwner));
+//          string.append("    " + bidOwner + ": $" + item.getBids().get(bidOwner) + "\n");
+          string.append(String.format("%4s: $%.2f\n", bidOwner, item.getBids().get(bidOwner)));
         }
       }
     }

@@ -8,9 +8,6 @@ import java.util.List;
 
 public class Auction implements Comparable<Auction>, Serializable {
 
-  private static final String[] OPTIONS = {"Change date", "Add item", "Remove item"};
-  private static final int HOUR_OFFSET = 12;
-
   //private String myName;
   private NonProfit myOwner;
   private LocalDateTime myStartDate;
@@ -26,7 +23,7 @@ public class Auction implements Comparable<Auction>, Serializable {
   }
 
   public Auction(NonProfit theOwner, LocalDateTime theStartDate, LocalDateTime theEndDate) {
-    this(theOwner, theStartDate, theEndDate, new ArrayList<Item>());
+    this(theOwner, theStartDate, theEndDate, new ArrayList<>());
   }
 
   public Auction(NonProfit theOwner) {
@@ -43,10 +40,10 @@ public class Auction implements Comparable<Auction>, Serializable {
             + myStartDate.getYear();
   }
 
-  public NonProfit getOwner() {
-    //TODO  return defensive copy, low priority
-    return myOwner;
-  }
+//  public NonProfit getOwner() {
+//    //TODO  return defensive copy, low priority
+//    return myOwner;
+//  }
 
   public LocalDateTime getStartDate() {
     //return defensive copy
@@ -79,8 +76,6 @@ public class Auction implements Comparable<Auction>, Serializable {
 
   /**
    * Implements compareTo in order to keep auctions sorted by date start.
-   *
-   * @returns sorting info
    * @see Comparable#compareTo(Object)
    */
   @Override

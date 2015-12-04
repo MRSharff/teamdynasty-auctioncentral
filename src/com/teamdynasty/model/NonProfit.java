@@ -3,7 +3,7 @@ package com.teamdynasty.model;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
+/**NonProfit class which keeps track of the nonprofits auction and it's inventory.
  * Created by Mat on 11/28/2015.
  */
 public class NonProfit extends User {
@@ -14,10 +14,10 @@ public class NonProfit extends User {
   private List<Item> myInventory;
 
   public NonProfit(final String theUsername, final String theOrgName) {
-    super(theUsername, INPO);
+    super(theUsername, User.INPO);
     myOrgName = theOrgName;
     myAuction = null;
-    myInventory = new ArrayList<Item>();
+    myInventory = new ArrayList<>();
   }
 
   public String getDashedName() {
@@ -28,13 +28,13 @@ public class NonProfit extends User {
     return myAuction;
   }
 
-  public String getMyOrgName() {
-    return myOrgName;
-  }
+//  public String getMyOrgName() {
+//    return myOrgName;
+//  }
 
-  public void setMyOrgName(final String theOrgName) {
-    myOrgName = theOrgName;
-  }
+//  public void setMyOrgName(final String theOrgName) {
+//    myOrgName = theOrgName;
+//  }
 
   public void setMyAuction(final Auction theAuction) {
     myAuction = theAuction;
@@ -55,9 +55,9 @@ public class NonProfit extends User {
     return myAuction;
   }
 
-  public void removeAuction() {
-    myAuction = null;
-  }
+//  public void removeAuction() {
+//    myAuction = null;
+//  }
 
   public List<Item> getMyInventory() {
     return myInventory;

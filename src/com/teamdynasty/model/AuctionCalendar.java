@@ -44,19 +44,19 @@ public class AuctionCalendar implements Serializable {
    * Initializes the auction list and user list.
    */
   public AuctionCalendar() {
-    myAuctions = new HashMap<Integer, List<Auction>>(TOTAL_MONTHS);
-    myUsers = new HashMap<String, User>();
+    myAuctions = new HashMap<>(TOTAL_MONTHS);
+    myUsers = new HashMap<>();
   }
 
-  /**
-   * Returns a auction list with month numerical as its key set.
-   *
-   * @return the auction list hash map with months as its keys.
-   * @see Auction
-   */
-  public HashMap<Integer, List<Auction>> getMyAuctions() {
-    return myAuctions;
-  }
+//  /**
+//   * Returns a auction list with month numerical as its key set.
+//   *
+//   * @return the auction list hash map with months as its keys.
+//   * @see Auction
+//   */
+//  public HashMap<Integer, List<Auction>> getMyAuctions() {
+//    return myAuctions;
+//  }
 
   /**
    * Returns a user list with username as its key set.
@@ -96,7 +96,7 @@ public class AuctionCalendar implements Serializable {
   public void addAuction(final Auction theAuction) {
 
     if (!myAuctions.containsKey(theAuction.getStartDate().getMonthValue())) {
-      ArrayList<Auction> newList = new ArrayList<Auction>();
+      ArrayList<Auction> newList = new ArrayList<>();
 
       myAuctions.put(theAuction.getStartDate().getMonthValue(), newList);
     }
@@ -104,6 +104,9 @@ public class AuctionCalendar implements Serializable {
     boolean bRPass = true;
     if (hasMaxAuctions()) {
       //System.out.println("Maximum auctions reached, no more auctions can be scheduled.");
+      bRPass = false;
+    }
+    if (maxInRollingPeriod(theAuction)) {
       bRPass = false;
     }
     if (maxAuctionsInOneDay(theAuction)) {
@@ -269,7 +272,7 @@ public class AuctionCalendar implements Serializable {
 
 
   public List<NonProfit> getNPOList() {
-    List<NonProfit> NPOList = new ArrayList<NonProfit>();
+    List<NonProfit> NPOList = new ArrayList<>();
 
     //int counter = 1;
     for (User user : myUsers.values()) {
@@ -283,13 +286,13 @@ public class AuctionCalendar implements Serializable {
     return NPOList;
   }
 
-  public NonProfit chooseNPO(int theIndex) {
-    return getNPOList().get(theIndex);
-  }
+//  public NonProfit chooseNPO(int theIndex) {
+//    return getNPOList().get(theIndex);
+//  }
 
-  public Auction getNPOAuction(NonProfit theNPO) {
-    return theNPO.getMyAuction();
-  }
+//  public Auction getNPOAuction(NonProfit theNPO) {
+//    return theNPO.getMyAuction();
+//  }
 //  private static NonProfit listNPO(HashMap<String, User> theUserList) {
 //    List<NonProfit> NPOList = new ArrayList<NonProfit>();
 //
