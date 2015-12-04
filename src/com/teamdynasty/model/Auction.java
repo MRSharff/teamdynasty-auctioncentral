@@ -12,24 +12,24 @@ public class Auction implements Comparable<Auction>, Serializable {
   private static final int HOUR_OFFSET = 12;
 
   //private String myName;
-  private NonProfitOrganization myOwner;
+  private NonProfit myOwner;
   private LocalDateTime myStartDate;
   private LocalDateTime myEndDate;
   private List<Item> myItems;
 
 
-  public Auction(NonProfitOrganization theOwner, LocalDateTime theStartDate, LocalDateTime theEndDate, List<Item> theItems) {
+  public Auction(NonProfit theOwner, LocalDateTime theStartDate, LocalDateTime theEndDate, List<Item> theItems) {
     myOwner = theOwner;
     myStartDate = theStartDate;
     myEndDate = theEndDate;
     myItems = theItems;
   }
 
-  public Auction(NonProfitOrganization theOwner, LocalDateTime theStartDate, LocalDateTime theEndDate) {
+  public Auction(NonProfit theOwner, LocalDateTime theStartDate, LocalDateTime theEndDate) {
     this(theOwner, theStartDate, theEndDate, new ArrayList<Item>());
   }
 
-  public Auction(NonProfitOrganization theOwner) {
+  public Auction(NonProfit theOwner) {
     this(theOwner, null, null);
   }
 
@@ -43,7 +43,7 @@ public class Auction implements Comparable<Auction>, Serializable {
             + myStartDate.getYear();
   }
 
-  public NonProfitOrganization getOwner() {
+  public NonProfit getOwner() {
     //TODO  return defensive copy, low priority
     return myOwner;
   }

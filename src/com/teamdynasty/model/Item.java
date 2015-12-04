@@ -51,19 +51,21 @@ public class Item implements Serializable {
     myQuantity = theQuantity;
   }
 
-  public boolean addBid(final String theBidder, final double bidAmount) {
+  public boolean addBid(final String theBidder, final double theBidAmount) {
     //BR 6 implemented here
     boolean flag = true;
-    if (hasBidder(theBidder)) {
-      if (myBids.get(theBidder) > bidAmount) {
-        flag = false;
-      }
-    }
-    if (bidAmount < myMinStartBid) {
+
+    //The bidder should be able to change their bid to a lower amount, I think
+//    if (hasBidder(theBidder)) {
+//      if (myBids.get(theBidder) > theBidAmount) {
+//        flag = false;
+//      }
+//    }
+    if (theBidAmount < myMinStartBid) {
       flag = false;
     }
     if (flag) {
-      myBids.put(theBidder, bidAmount);
+      myBids.put(theBidder, theBidAmount);
     }
 
     return flag;

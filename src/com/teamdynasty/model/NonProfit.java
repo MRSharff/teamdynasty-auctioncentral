@@ -6,15 +6,15 @@ import java.util.List;
 /**
  * Created by Mat on 11/28/2015.
  */
-public class NonProfitOrganization extends User {
+public class NonProfit extends User {
 
   private boolean isScheduled;
   private String myOrgName;
   private Auction myAuction;
   private List<Item> myInventory;
 
-  public NonProfitOrganization(final String theUsername, final String theOrgName) {
-    super(theUsername, User.INPO);
+  public NonProfit(final String theUsername, final String theOrgName) {
+    super(theUsername, INPO);
     myOrgName = theOrgName;
     myAuction = null;
     myInventory = new ArrayList<Item>();
@@ -66,5 +66,9 @@ public class NonProfitOrganization extends User {
   @Override
   public String toString() {
     return myOrgName;
+  }
+
+  public void addItemToInventory(Item theItem) {
+    myInventory.add(theItem);
   }
 }

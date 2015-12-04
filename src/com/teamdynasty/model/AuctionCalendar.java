@@ -33,6 +33,7 @@ public class AuctionCalendar implements Serializable {
   private static final int MAX_ROLLING_AUCTIONS = 5;
   private static final int MAX_ROLLING_DAYS = 7;
   private static final int MINIMUM_HOURS_BETWEEN = 2;
+  private static final long HOUR_OFFSET = 1;
 
   private HashMap<Integer, List<Auction>> myAuctions;
   private HashMap<String, User> myUsers;
@@ -65,6 +66,22 @@ public class AuctionCalendar implements Serializable {
    */
   public HashMap<String, User> getMyUsers() {
     return myUsers;
+  }
+
+  public List<Auction> getMonthList(int theMonth) {
+    return myAuctions.get(theMonth - 1);
+  }
+
+  public List<Auction> getFutureMonthsAuctions(int theMonth) {
+    List<Auction> theAuctions = new ArrayList<>();
+
+    for (Auction auction : getMonthList(theMonth)) {
+      if (auction.getStartDate().isAfter(LocalDateTime.now().minusHours(HOUR_OFFSET))) {
+        theAuctions.add(auction);
+      }
+    }
+
+    return theAuctions;
   }
 
   /**
@@ -251,13 +268,13 @@ public class AuctionCalendar implements Serializable {
   }
 
 
-  public List<NonProfitOrganization> getNPOList() {
-    List<NonProfitOrganization> NPOList = new ArrayList<NonProfitOrganization>();
+  public List<NonProfit> getNPOList() {
+    List<NonProfit> NPOList = new ArrayList<NonProfit>();
 
     //int counter = 1;
     for (User user : myUsers.values()) {
       if (user.getUserType() == User.INPO) {
-        NPOList.add((NonProfitOrganization) user);
+        NPOList.add((NonProfit) user);
         //System.out.println("[" + counter + "] " + user.getUsername());
         //counter++;
       }
@@ -266,15 +283,15 @@ public class AuctionCalendar implements Serializable {
     return NPOList;
   }
 
-  public NonProfitOrganization chooseNPO(int theIndex) {
+  public NonProfit chooseNPO(int theIndex) {
     return getNPOList().get(theIndex);
   }
 
-  public Auction getNPOAuction(NonProfitOrganization theNPO) {
+  public Auction getNPOAuction(NonProfit theNPO) {
     return theNPO.getMyAuction();
   }
-//  private static NonProfitOrganization listNPO(HashMap<String, User> theUserList) {
-//    List<NonProfitOrganization> NPOList = new ArrayList<NonProfitOrganization>();
+//  private static NonProfit listNPO(HashMap<String, User> theUserList) {
+//    List<NonProfit> NPOList = new ArrayList<NonProfit>();
 //
 //
 //    System.out.println("Choose a Non-Profit Organization");
@@ -282,7 +299,7 @@ public class AuctionCalendar implements Serializable {
 //    int counter = 1;
 //    for (User user : theUserList.values()) {
 //      if (user.getUserType() == AuctionCentral.INPO) {
-//        NPOList.add((NonProfitOrganization) user);
+//        NPOList.add((NonProfit) user);
 //        System.out.println("[" + counter + "] " + user.getUsername());
 //        counter++;
 //      }
