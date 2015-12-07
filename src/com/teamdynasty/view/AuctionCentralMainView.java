@@ -46,7 +46,6 @@ public class AuctionCentralMainView {
 
   public static final String ACTION_CANCELED_MSG = "Action Canceled";
 
-
   public static final String[] USER_TYPES = {"Auction Central Employee",
           "Non-Profit Organization",
           "Bidder"};
@@ -162,7 +161,7 @@ public class AuctionCentralMainView {
           System.out.println(ENTER_NP_MSG);
           userInput.nextLine();
           String npoName = userInput.nextLine();
-          newUser = new NonProfit(userName, npoName);
+          newUser = new NonProfit(userName, userType, npoName);
         } else {
           newUser = new User(userName, userType);
         }
@@ -200,16 +199,24 @@ public class AuctionCentralMainView {
 
   public static void printAuctionDetails(Auction theAuction) {
     StringBuilder string = new StringBuilder("Details for " + theAuction.getMyName());
-    string.append("Start Date: ");
-    string.append(theAuction.getStartDate().toString());
     string.append("\n");
+    string.append(String.format("Start Time: %d:%d\n", theAuction.getStartDate().getHour(),
+            theAuction.getStartDate().getMinute()));
+    string.append(String.format("End Time: %d:%d\n", theAuction.getEndDate().getHour(),
+            theAuction.getEndDate().getMinute()));
     //returnString.append("End Date: " + myEndDate.toString() + "\n");
 
     //flag for printing bids
     boolean canViewBids = theAuction.getEndDate().isBefore(LocalDateTime.now());
 
+    if (theAuction.getInventory().size() > 0) {
+     string.append("Items:\n");
+    }
     for (Item item : theAuction.getInventory()) {
       string.append(item.getName());
+      string.append(", Quantity: ");
+      string.append(item.getQuantity());
+      string.append("\n");
       if (canViewBids) {
         string.append("\n  Bids:\n");
         for (String bidOwner : item.getBids().keySet()) {
@@ -250,8 +257,8 @@ public class AuctionCentralMainView {
   private static void setupUsers(AuctionCalendar theCalendar) {
     User newACEmployee = new User("ACETester", 1);
     User newBidder = new User("BidderTester", 3);
-    NonProfit newNPO = new NonProfit("NPOTest", "Test Organization");
-    NonProfit newNPO2 = new NonProfit("NPOTest2", "Second Organization");
+    NonProfit newNPO = new NonProfit("NPOTest", 2, "Test Organization");
+    NonProfit newNPO2 = new NonProfit("NPOTest2", 2, "Second Organization");
 
 
 

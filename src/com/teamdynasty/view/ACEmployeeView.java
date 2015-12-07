@@ -19,13 +19,6 @@ public class ACEmployeeView implements IUserView {
   private static final String[] USER_OPTIONS = {"View Monthly Calendar",
                                                 "View details of auction"};
 
-//  private static Scanner myScanner;
-//
-//  public ACEmployeeView(Scanner theScanner) {
-//    //default Constructor.
-//    myScanner = theScanner;
-//  }
-
   public void Options(Scanner theScanner, AuctionCalendar theCalendar, User theUser) {
     int userChoice;
 

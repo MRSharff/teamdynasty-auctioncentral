@@ -5,20 +5,21 @@ import com.teamdynasty.model.*;
 import java.time.LocalDateTime;
 import java.util.Scanner;
 
-/**Console input and output view for dealing with NonProfit users.
+/**
+ * Console input and output view for dealing with NonProfit users.
  * Created by Mat on 12/3/2015.
  */
 public class NonProfitView implements IUserView {
 
   private static final String[] USER_OPTIONS = {"Schedule Auction",
-                                                "Create Auction",
-                                                "Edit Auction",
-                                                "Create New Inventory Item",
-                                                "Edit Inventory Item"};
+          "Create Auction",
+          "Edit Auction",
+          "Create New Inventory Item",
+          "Edit Inventory Item"};
 
   public static final String[] AUCTION_OPTIONS = {"Change date",
-                                                  "Add item",
-                                                  "Remove item"};
+          "Add item",
+          "Remove item"};
 
   public static final String NO_AUCTION_MSG = "You do not have an auction";
 
@@ -38,6 +39,7 @@ public class NonProfitView implements IUserView {
         AuctionCentralMainView.printOptionList(USER_OPTIONS,
                 AuctionCentralMainView.LOGOUT_OPTION);
         userChoice = theScanner.nextInt();
+        theScanner.nextLine();
 
         switch (userChoice) {
           case 1:
@@ -50,7 +52,7 @@ public class NonProfitView implements IUserView {
             editAuction(theScanner, theCalendar, user);
             break;
           case 4:
-            createNewInventoryItem(theScanner,user);
+            createNewInventoryItem(theScanner, user);
             break;
           case 5:
             editInventoryItem(theScanner, user);
@@ -64,11 +66,11 @@ public class NonProfitView implements IUserView {
   }
 
   private static void scheduleAuction(AuctionCalendar theCalendar, NonProfit theUser) {
-      if (!theUser.hasAuction()) {
-        System.out.println("You do not have an auction to schedule, please create one first.");
-      } else {
-        theCalendar.addAuction(theUser.scheduleAuction());
-      }
+    if (!theUser.hasAuction()) {
+      System.out.println("You do not have an auction to schedule, please create one first.");
+    } else {
+      theCalendar.addAuction(theUser.scheduleAuction());
+    }
   }
 
   private static void createAuction(Scanner theScanner, NonProfit theUser) {
@@ -131,7 +133,7 @@ public class NonProfitView implements IUserView {
     AuctionCentralMainView.printOptionList(theUser.getMyInventory().toArray(), AuctionCentralMainView.CANCEL_OPTION);
     int option = theScanner.nextInt();
 
-    if (option == theUser.getMyInventory().size()) {
+    if (option == theUser.getMyInventory().size() + 1) {
       System.out.println(AuctionCentralMainView.ACTION_CANCELED_MSG);
     } else {
       Item item = theUser.getMyInventory().get(option - 1);
@@ -173,44 +175,82 @@ public class NonProfitView implements IUserView {
    ********************************/
 
   public static LocalDateTime newStartDate(Scanner theScanner) {
-    System.out.print("Enter auction month (numerical): ");
-    int aMonth = theScanner.nextInt();
-    theScanner.nextLine();
-    System.out.print("Enter auction day: ");
-    int aDay = theScanner.nextInt();
-    theScanner.nextLine();
-    System.out.print("Enter auction year: ");
-    int aYear = theScanner.nextInt();
-    theScanner.nextLine();
+    LocalDateTime newDate;
+    do {
+      System.out.print("Enter auction month (numerical): ");
+      int aMonth = theScanner.nextInt();
+      theScanner.nextLine();
+      System.out.print("Enter auction day: ");
+      int aDay = theScanner.nextInt();
+      theScanner.nextLine();
+      System.out.print("Enter auction year: ");
+      int aYear = theScanner.nextInt();
+      theScanner.nextLine();
 
-    //get start time
-    System.out.print("Enter auction start time: ");
-    String time = theScanner.nextLine();
+      //get start time
+      String time;
+      boolean matches;
+      do {
+        System.out.print("Enter auction start time (hh:mm): ");
+        time = theScanner.nextLine();
 
-    String theTime = time.replace(':', ' ');
-    Scanner detailScanner = new Scanner(theTime);
-    int hour = detailScanner.nextInt();
-    int minutes = detailScanner.nextInt();
+        matches = time.matches("(\\d+):(\\d+)");
+        if (!matches) {
+          System.out.println("Incorrect time format");
+        }
+      } while (!matches);
 
-    //check if user entered 24 hour time
-    if (hour < 13) {
-      System.out.print("AM or PM: ");
-      String amPM = theScanner.nextLine();
-      //if not, ask for am or pm
-      if (amPM.toLowerCase().equals("pm")) {
-        hour = (hour % HOUR_OFFSET) + HOUR_OFFSET;
+
+      String theTime = time.replace(':', ' ');
+      Scanner detailScanner = new Scanner(theTime);
+      int hour = detailScanner.nextInt();
+      int minutes = detailScanner.nextInt();
+
+      //check if user entered 24 hour time
+      if (hour < 13) {
+        do {
+          System.out.print("AM or PM: ");
+          String amPM = theScanner.nextLine();
+          amPM = amPM.toLowerCase();
+          matches = amPM.matches("am") || amPM.matches("pm");
+          //if not, ask for am or pm
+          if (matches) {
+            if (amPM.equals("pm")) {
+              hour = (hour % HOUR_OFFSET) + HOUR_OFFSET;
+            }
+          } else {
+            System.out.println("Please enter AM or PM");
+          }
+        } while (!matches);
       }
-    }
+      newDate = LocalDateTime.of(aYear, aMonth, aDay, hour, minutes);
+      if (newDate.isBefore(LocalDateTime.now())) {
+        System.out.println("Your auction must be set for a future date.");
+      }
+    } while (newDate.isBefore(LocalDateTime.now()));
 
-    return LocalDateTime.of(aYear, aMonth, aDay, hour, minutes);
+    return newDate;
   }
 
   public static LocalDateTime newEndDate(final LocalDateTime theStartDate, Scanner theScanner) {
     //Scanner detailScanner = new Scanner(System.in);
     LocalDateTime endDate;
     do {
-      System.out.print("Enter auction end time (hh:mm): ");
-      String time = theScanner.nextLine();
+      String time;
+      boolean matches;
+      do {
+        System.out.print("Enter auction end time (hh:mm): ");
+        time = theScanner.nextLine();
+
+        matches = time.matches("(\\d+):(\\d+)");
+        if (!matches) {
+          System.out.println("Incorrect time format");
+        }
+      } while (!matches);
+
+//      System.out.print("Enter auction end time (hh:mm): ");
+//      String time = theScanner.nextLine();
+
 
       String theTime = time.replace(':', ' ');
       Scanner detailScanner = new Scanner(theTime);
@@ -233,7 +273,7 @@ public class NonProfitView implements IUserView {
 
       if (endDate.isBefore(theStartDate)) {
         //TODO code to change back into 12 hour should go here
-        System.out.println("End time must be after start time ("
+        System.out.println("End time must be after start time: "
                 + theStartDate.getHour() + ":" + theStartDate.getMinute());
       }
 
@@ -249,19 +289,6 @@ public class NonProfitView implements IUserView {
   /******************************
    * editAuction Helper methods *
    ******************************/
-
-  public static void removeAuctionItem(Scanner theScanner, NonProfit theUser) {
-    System.out.println("Choose an item to remove:");
-//    listNPOInventoryItems(theUser);
-    AuctionCentralMainView.printOptionList(theUser.getMyAuction().getInventory().toArray(), AuctionCentralMainView.CANCEL_OPTION);
-    int itemNumber = theScanner.nextInt();
-
-    if (itemNumber > 0 && itemNumber <= theUser.getMyAuction().getInventory().size()){
-      theUser.getMyAuction().removeItem(itemNumber - 1);
-    } else {
-      System.out.println(AuctionCentralMainView.INPUT_ERROR_MSG);
-    }
-  }
 
   public static void changeAuctionDate(Scanner theScanner, AuctionCalendar theCalendar, NonProfit theUser) {
     if (theUser.hasAuction()) {
@@ -305,28 +332,64 @@ public class NonProfitView implements IUserView {
           } else {
             //-1 for list to index offset
             theUser.getMyAuction().addItem(theUser.getMyInventory().get(addItemOption - 1));
+            System.out.println("Item added: " + theUser.getMyInventory().get(addItemOption - 1).getName());
           }
           break;
         case 2:
-          theUser.getMyAuction().getInventory().add(createItem(theScanner));
+          Item newItem = createItem(theScanner);
+          theUser.getMyAuction().addItem(newItem);
+          theUser.addItemToInventory(newItem);
+          System.out.println("Item added: " + newItem.getName());
           break;
       }
     }
   }
 
+  public static void removeAuctionItem(Scanner theScanner, NonProfit theUser) {
+    System.out.println("Choose an item to remove:");
+//    listNPOInventoryItems(theUser);
+    AuctionCentralMainView.printOptionList(theUser.getMyAuction().getInventory().toArray(), AuctionCentralMainView.CANCEL_OPTION);
+    int itemNumber = theScanner.nextInt();
+    theScanner.nextLine();
+
+    if (itemNumber > 0 && itemNumber <= theUser.getMyAuction().getInventory().size()) {
+      theUser.getMyAuction().removeItem(itemNumber - 1);
+    } else {
+      System.out.println(AuctionCentralMainView.INPUT_ERROR_MSG);
+    }
+  }
+
+  /**********************************
+   * End editAuction Helper methods *
+   **********************************/
 
 
   public static Item createItem(Scanner theScanner) {
+    boolean matches;
     //code to add inventory item
     System.out.println("Creating an Item...");
 
-    theScanner.nextLine();
+
     System.out.print("Enter item name: ");
     String itemName = theScanner.nextLine();
-    System.out.print("Enter quantity: ");
+    do {
+      System.out.print("Enter quantity: ");
+      matches = theScanner.hasNextInt();
+      if (!matches) {
+        System.out.println("Please enter an integer quantity");
+        theScanner.nextLine();
+      }
+    } while (!matches);
     int itemQuantity = theScanner.nextInt();
     theScanner.nextLine();
-    System.out.print("Enter minimum starting bid: ");
+    do {
+      System.out.print("Enter minimum starting bid: ");
+      matches = theScanner.hasNextDouble();
+      if (!matches) {
+        System.out.println("Incorrect input");
+        theScanner.nextLine();
+      }
+    } while (!matches);
     double startingBid = theScanner.nextDouble();
     theScanner.nextLine();
 
