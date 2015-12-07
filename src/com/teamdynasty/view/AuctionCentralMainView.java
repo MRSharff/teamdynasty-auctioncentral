@@ -17,6 +17,8 @@ public class AuctionCentralMainView {
 
   public static final String NEW_USER_MSG = "Please enter a new Username: ";
 
+  public static final String USER_NOT_FOUND_MSG = "Account not found.";
+
   public static final String DUPLICATE_USERNAME_MSG = "That username already exists, please enter a different username:";
 
   public static final String USER_TYPE_PROMPT_MESSAGE = "Select User Type:";
@@ -88,7 +90,11 @@ public class AuctionCentralMainView {
             System.out.println(LOGIN_ERROR_MESSAGE);
         }
 
-        userMenu();
+        if (currentUser != null) {
+          userMenu();
+        } else {
+          System.out.println(USER_NOT_FOUND_MSG);
+        }
       }
     } while (currentUser == null);
   }
@@ -126,11 +132,13 @@ public class AuctionCentralMainView {
   public static void userLogin() {
     System.out.print(GET_USERNAME_MSG);
 
-    String userName = userInput.nextLine();
+    String userName = userInput.nextLine().toLowerCase();
 
     if (myCalendar.getMyUsers().keySet().contains(userName.toLowerCase())) {
       currentUser = myCalendar.getMyUsers().get(userName.toLowerCase());
       //currentUser = new User(myCalendar.getMyUsers().get(userName.toLowerCase()), userInput, myCalendar);
+    } else {
+      currentUser = null;
     }
   }
 

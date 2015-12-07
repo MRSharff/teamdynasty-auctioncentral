@@ -69,8 +69,12 @@ public class ACEmployeeView implements IUserView {
   }
 
   private static void displayFutureMonthsAuctions(AuctionCalendar theCalendar, int theMonth) {
-    for (Auction auction : theCalendar.getFutureMonthsAuctions(theMonth)) {
-      System.out.println(auction.getMyName());
+    if (theCalendar.hasMonthList(theMonth)) {
+      for (Auction auction : theCalendar.getFutureMonthsAuctions(theMonth)) {
+        System.out.println(auction.getMyName());
+      }
+    } else {
+      System.out.println("No Auctions for this month");
     }
   }
 
@@ -91,19 +95,20 @@ public class ACEmployeeView implements IUserView {
     if (userInput == monthList.size() + 1) {
       System.out.println(AuctionCentralMainView.ACTION_CANCELED_MSG);
     } else if (userInput > 0 && userInput < 13) {
-      System.out.println(AuctionCentralMainView.CHOOSE_OPTION_MSG);
-      AuctionCentralMainView.printOptionList(theCalendar.getFutureMonthsAuctions(userInput).toArray(),
-              AuctionCentralMainView.CANCEL_OPTION);
-      int month = userInput;
-      userInput = theScanner.nextInt();
-      theScanner.nextLine();
+      if (theCalendar.hasMonthList(userInput)) {
+        System.out.println(AuctionCentralMainView.CHOOSE_OPTION_MSG);
+        AuctionCentralMainView.printOptionList(theCalendar.getFutureMonthsAuctions(userInput).toArray(),
+                AuctionCentralMainView.CANCEL_OPTION);
+        int month = userInput;
+        userInput = theScanner.nextInt();
+        theScanner.nextLine();
 
-
-      AuctionCentralMainView.printAuctionDetails(theCalendar.getFutureMonthsAuctions(month).get(userInput));
+        AuctionCentralMainView.printAuctionDetails(theCalendar.getFutureMonthsAuctions(month).get(userInput));
+      } else {
+        System.out.println("No Auctions for this month");
+      }
     } else {
       System.out.println(AuctionCentralMainView.INPUT_ERROR_MSG);
     }
-
-
   }
 }

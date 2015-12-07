@@ -69,19 +69,37 @@ public class AuctionCalendar implements Serializable {
   }
 
   public List<Auction> getMonthList(int theMonth) {
-    return myAuctions.get(theMonth - 1);
+    if (myAuctions.containsKey(theMonth)) {
+      return myAuctions.get(theMonth);
+    }
+    return null;
   }
 
   public List<Auction> getFutureMonthsAuctions(int theMonth) {
     List<Auction> theAuctions = new ArrayList<>();
 
-    for (Auction auction : getMonthList(theMonth)) {
-      if (auction.getStartDate().isAfter(LocalDateTime.now().minusHours(HOUR_OFFSET))) {
-        theAuctions.add(auction);
+    if (myAuctions.containsKey(theMonth)) {
+      for (Auction auction : getMonthList(theMonth)) {
+        if (auction.getStartDate().isAfter(LocalDateTime.now().minusHours(HOUR_OFFSET))) {
+          theAuctions.add(auction);
+        }
       }
+      return theAuctions;
     }
+    return null;
+  }
 
-    return theAuctions;
+  public List<Auction> getMonthsAuctions(int theMonth) {
+    List<Auction> theAuctions = new ArrayList<>();
+
+    if (myAuctions.containsKey(theMonth)) {
+      return theAuctions;
+    }
+    return null;
+  }
+
+  public boolean hasMonthList(int theMonth) {
+    return myAuctions.containsKey(theMonth);
   }
 
   /**
