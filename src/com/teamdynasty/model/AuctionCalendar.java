@@ -283,9 +283,6 @@ public class AuctionCalendar implements Serializable {
       for (Auction auction : myAuctions.get(otherAuction.getStartDate().getMonthValue())) {
         if (auction.getStartDate().getDayOfMonth() == otherAuction.getStartDate().getDayOfMonth()) {
           count++;
-          if (auctionStartTooSoon(auction, otherAuction)) {
-            return true;
-          }
         }
       }
       return (count >= MAX_AUCTIONS_ONE_DAY);
@@ -294,18 +291,18 @@ public class AuctionCalendar implements Serializable {
     return false;
   }
 
-//  public boolean auctionTooClose(final Auction otherAuction) {
-//    if (myAuctions.containsKey(otherAuction.getStartDate().getMonthValue())) {
-//      for (Auction auction : myAuctions.get(otherAuction.getStartDate().getMonthValue())) {
-//        if (auction.getStartDate().getDayOfMonth() == otherAuction.getStartDate().getDayOfMonth()) {
-//          if (auctionStartTooSoon(auction, otherAuction)) {
-//            return true;
-//          }
-//        }
-//      }
-//    }
-//    return false;
-//  }
+  public boolean auctionTooClose(final Auction otherAuction) {
+    if (myAuctions.containsKey(otherAuction.getStartDate().getMonthValue())) {
+      for (Auction auction : myAuctions.get(otherAuction.getStartDate().getMonthValue())) {
+        if (auction.getStartDate().getDayOfMonth() == otherAuction.getStartDate().getDayOfMonth()) {
+          if (auctionStartTooSoon(auction, otherAuction)) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
 
 
   /**

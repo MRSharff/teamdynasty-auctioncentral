@@ -97,6 +97,8 @@ public class NonProfitView implements IUserView {
         System.out.println(MAX_ROLLING_MSG);
       } else if (theCalendar.maxAuctionsInOneDay(userAuction)) {
         System.out.println(MAX_AUCTIONS_PER_DAY_MSG);
+      } else if (theCalendar.auctionTooClose(userAuction)) {
+        System.out.println("The start time of one auction may be no earlier\nthan 2 hours after the end of the first.");
       } else if (theUser.maxAuctionsPerYear()) {
         System.out.println("You may only have one Auction in a year.");
       } else {
