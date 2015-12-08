@@ -67,10 +67,10 @@ public class BidderView implements IUserView {
     if (userChoice == npoList.size()) {
       System.out.println(AuctionCentralMainView.ACTION_CANCELED_MSG);
     } else {
-      if (!npoList.get(userChoice).isScheduled()) {
+      if (!npoList.get(userChoice).isCurrentlyScheduled()) {
         System.out.println(NO_AUCTION_MSG);
       } else {
-        for (Item item : npoList.get(userChoice).getMyAuction().getInventory()) {
+        for (Item item : npoList.get(userChoice).getPendingAuction().getInventory()) {
           System.out.println(item.toString());
           System.out.println(String.format("  Quantity: %d", item.getQuantity()));
           System.out.println(String.format("  Minimum Starting Bid: %.2f", item.getMyMinStartBid()));
@@ -93,13 +93,13 @@ public class BidderView implements IUserView {
     if (userChoice == npoList.size()) {
       System.out.println(AuctionCentralMainView.ACTION_CANCELED_MSG);
     } else {
-      if (!npoList.get(userChoice).isScheduled()) {
+      if (!npoList.get(userChoice).isCurrentlyScheduled()) {
         System.out.println(NO_AUCTION_MSG);
       } else {
 
         System.out.println(CHOOSE_ITEM_MSG);
         int counter = 1;
-        List<Item> itemList = npoList.get(userChoice).getMyAuction().getInventory();
+        List<Item> itemList = npoList.get(userChoice).getPendingAuction().getInventory();
         for (Item item : itemList) {
           System.out.println(String.format("[%d], %s (minimum starting bid: %.2f",
                   counter,

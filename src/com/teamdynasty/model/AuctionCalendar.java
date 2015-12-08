@@ -279,16 +279,34 @@ public class AuctionCalendar implements Serializable {
    */
   public boolean maxAuctionsInOneDay(final Auction otherAuction) {
     int count = 0;
-    for (Auction auction : myAuctions.get(otherAuction.getStartDate().getMonthValue())) {
-      if (auction.getStartDate().getDayOfMonth() == otherAuction.getStartDate().getDayOfMonth()) {
-        count++;
-        if (auctionStartTooSoon(auction, otherAuction)) {
-          return true;
+    if (myAuctions.containsKey(otherAuction.getStartDate().getMonthValue())) {
+      for (Auction auction : myAuctions.get(otherAuction.getStartDate().getMonthValue())) {
+        if (auction.getStartDate().getDayOfMonth() == otherAuction.getStartDate().getDayOfMonth()) {
+          count++;
+          if (auctionStartTooSoon(auction, otherAuction)) {
+            return true;
+          }
         }
       }
+      return (count >= MAX_AUCTIONS_ONE_DAY);
     }
-    return (count >= MAX_AUCTIONS_ONE_DAY);
+
+    return false;
   }
+
+//  public boolean auctionTooClose(final Auction otherAuction) {
+//    if (myAuctions.containsKey(otherAuction.getStartDate().getMonthValue())) {
+//      for (Auction auction : myAuctions.get(otherAuction.getStartDate().getMonthValue())) {
+//        if (auction.getStartDate().getDayOfMonth() == otherAuction.getStartDate().getDayOfMonth()) {
+//          if (auctionStartTooSoon(auction, otherAuction)) {
+//            return true;
+//          }
+//        }
+//      }
+//    }
+//    return false;
+//  }
+
 
   /**
    * Business Rule 4 Part B : The start time of the second auction can be no earlier than 2 hours
@@ -334,7 +352,7 @@ public class AuctionCalendar implements Serializable {
 //  }
 
 //  public Auction getNPOAuction(NonProfit theNPO) {
-//    return theNPO.getMyAuction();
+//    return theNPO.getPendingAuction();
 //  }
 //  private static NonProfit listNPO(HashMap<String, User> theUserList) {
 //    List<NonProfit> NPOList = new ArrayList<NonProfit>();
@@ -354,7 +372,7 @@ public class AuctionCalendar implements Serializable {
 //    int option = userInput.nextInt();
 //    userInput.nextLine();
 //    System.out.println("You chose " + NPOList.get(option - 1).getMyOrgName() + "'s Auction, "
-//            + NPOList.get(option - 1).getMyAuction().getMyName());
+//            + NPOList.get(option - 1).getPendingAuction().getMyName());
 //    return NPOList.get(option - 1);
 //  }
 

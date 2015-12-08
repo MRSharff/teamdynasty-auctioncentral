@@ -1,5 +1,6 @@
 package com.teamdynasty.model;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,23 +11,29 @@ public class NonProfit extends User {
 
 
   private boolean isScheduled;
+  private Auction scheduledAuction;
+  private LocalDateTime dateOfLastAuction;
   private String myOrgName;
-  private Auction myAuction;
+  private Auction pendingAuction;
   private List<Item> myInventory;
 
   public NonProfit(final String theUsername, final String theOrgName) {
     super(theUsername, User.INPO);
+    isScheduled = false;
+    scheduledAuction = null;
+    dateOfLastAuction = null;
     myOrgName = theOrgName;
-    myAuction = null;
+    pendingAuction = null;
     myInventory = new ArrayList<>();
+
   }
 
   public String getDashedName() {
     return myOrgName.replace(" ", "-");
   }
 
-  public Auction getMyAuction() {
-    return myAuction;
+  public Auction getPendingAuction() {
+    return pendingAuction;
   }
 
 //  public String getMyOrgName() {
@@ -37,27 +44,39 @@ public class NonProfit extends User {
 //    myOrgName = theOrgName;
 //  }
 
-  public void setMyAuction(final Auction theAuction) {
-    myAuction = theAuction;
+  public void setPendingAuction(final Auction theAuction) {
+    pendingAuction = theAuction;
   }
 
-  public boolean hasAuction() {
-    return (myAuction != null);
+  public boolean hasPendingAuction() {
+    return (pendingAuction != null);
   }
 
-  public boolean isScheduled() {
-    return isScheduled;
+  public boolean isCurrentlyScheduled() {
+    return scheduledAuction != null && scheduledAuction.getStartDate().isAfter(LocalDateTime.now());
   }
 
   public Auction scheduleAuction() {
-    if (myAuction != null) {
-      isScheduled = true;
+    if (!isCurrentlyScheduled()) {
+      if (hasPendingAuction() && !maxAuctionsPerYear()) {
+        scheduledAuction = pendingAuction;
+        //isCurrentlyScheduled = true;
+        pendingAuction = null;
+        return scheduledAuction;
+      }
     }
-    return myAuction;
+    return null;
+  }
+
+  public boolean maxAuctionsPerYear() {
+    if (isCurrentlyScheduled()) {
+      return true;
+    }
+    return scheduledAuction != null && dateOfLastAuction.isAfter(LocalDateTime.now().minusYears(1));
   }
 
 //  public void removeAuction() {
-//    myAuction = null;
+//    pendingAuction = null;
 //  }
 
   public List<Item> getMyInventory() {
@@ -71,5 +90,9 @@ public class NonProfit extends User {
 
   public void addItemToInventory(Item theItem) {
     myInventory.add(theItem);
+  }
+
+  public LocalDateTime getDateOfLastAuction() {
+    return dateOfLastAuction;
   }
 }

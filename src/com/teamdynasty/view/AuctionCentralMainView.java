@@ -42,6 +42,8 @@ public class AuctionCentralMainView {
 
   public static final String CANCEL_OPTION = "Cancel";
 
+  public static final String BACK_OPTION = "Back";
+
   public static final String EXIT_OPTION = "Save and Exit";
 
   public static final String ACTION_CANCELED_MSG = "Action Canceled";
