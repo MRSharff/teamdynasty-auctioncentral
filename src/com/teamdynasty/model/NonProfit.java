@@ -1,6 +1,7 @@
 package com.teamdynasty.model;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +55,11 @@ public class NonProfit extends User {
 
   public boolean isCurrentlyScheduled() {
     return scheduledAuction != null && scheduledAuction.getStartDate().isAfter(LocalDateTime.now());
+  }
+
+  public boolean auctionIsHappening() {
+    return LocalDateTime.now().isAfter(scheduledAuction.getStartDate())
+            && LocalDateTime.now().isBefore(scheduledAuction.getEndDate());
   }
 
   public Auction scheduleAuction() {

@@ -64,7 +64,7 @@ public class BidderView implements IUserView {
     userChoice = theScanner.nextInt();
     theScanner.nextLine();
 
-    if (userChoice == npoList.size()) {
+    if (userChoice == npoList.size() + 1) {
       System.out.println(AuctionCentralMainView.ACTION_CANCELED_MSG);
     } else {
       if (!npoList.get(userChoice).isCurrentlyScheduled()) {
@@ -93,40 +93,45 @@ public class BidderView implements IUserView {
     if (userChoice == npoList.size()) {
       System.out.println(AuctionCentralMainView.ACTION_CANCELED_MSG);
     } else {
-      if (!npoList.get(userChoice).isCurrentlyScheduled()) {
+      NonProfit npo = npoList.get(userChoice);
+      if (!npo.isCurrentlyScheduled()) {
         System.out.println(NO_AUCTION_MSG);
       } else {
 
-        System.out.println(CHOOSE_ITEM_MSG);
-        int counter = 1;
-        List<Item> itemList = npoList.get(userChoice).getPendingAuction().getInventory();
-        for (Item item : itemList) {
-          System.out.println(String.format("[%d], %s (minimum starting bid: %.2f",
-                  counter,
-                  item.toString(),
-                  item.getMyMinStartBid()));
-
-          counter++;
-        }
-        System.out.println(String.format("[%d] %s", counter, AuctionCentralMainView.CANCEL_OPTION));
-        userChoice = theScanner.nextInt();
-        theScanner.nextLine();
-
-        if (userChoice == counter) {
-          System.out.println(AuctionCentralMainView.ACTION_CANCELED_MSG);
+        if (!npo.auctionIsHappening()) {
+          System.out.println("Their auction is not available to bid on at this time.");
         } else {
-          boolean addedBid;
-          do {
-            System.out.println("Enter bid amount: ");
-            double bidAmount = theScanner.nextDouble();
-            theScanner.nextLine();
+          System.out.println(CHOOSE_ITEM_MSG);
+          int counter = 1;
+          List<Item> itemList = npoList.get(userChoice).getPendingAuction().getInventory();
+          for (Item item : itemList) {
+            System.out.println(String.format("[%d], %s (minimum starting bid: %.2f",
+                    counter,
+                    item.toString(),
+                    item.getMyMinStartBid()));
 
-            addedBid = itemList.get(userChoice).addBid(theUser.getUsername().toLowerCase(), bidAmount);
-            if (!addedBid) {
-              System.out.println(BID_TOO_LOW_MSG);
-              System.out.println(String.format("Item minimum starting bid is: $%.2f", itemList.get(userChoice).getMyMinStartBid()));
-            }
-          } while (!addedBid);
+            counter++;
+          }
+          System.out.println(String.format("[%d] %s", counter, AuctionCentralMainView.CANCEL_OPTION));
+          userChoice = theScanner.nextInt();
+          theScanner.nextLine();
+
+          if (userChoice == counter) {
+            System.out.println(AuctionCentralMainView.ACTION_CANCELED_MSG);
+          } else {
+            boolean addedBid;
+            do {
+              System.out.println("Enter bid amount: ");
+              double bidAmount = theScanner.nextDouble();
+              theScanner.nextLine();
+
+              addedBid = itemList.get(userChoice).addBid(theUser.getUsername().toLowerCase(), bidAmount);
+              if (!addedBid) {
+                System.out.println(BID_TOO_LOW_MSG);
+                System.out.println(String.format("Item minimum starting bid is: $%.2f", itemList.get(userChoice).getMyMinStartBid()));
+              }
+            } while (!addedBid);
+          }
         }
       }
     }

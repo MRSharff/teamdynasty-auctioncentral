@@ -56,18 +56,42 @@ public class AuctionCentralMainView {
 
   //End Constants
 
+  /** The Scanner used for entire program. */
   private static Scanner userInput;
+
+  /** The Calendar that keeps track of users and auctions. */
   private static AuctionCalendar myCalendar;
+
+  /** The currently logged in user. */
   private static User currentUser;
+
+  /** Stores User views to call Options from. */
   private static IUserView[] userTypeArray;
 
+  /**
+   * Runs the program.
+   * @param args
+   */
   public static void main(String[] args) {
     //load the saved database
     initialize();
+
+    //for testing
+    myCalendar = new AuctionCalendar();
+    setupMaxAuctionsCalendar(myCalendar);
+//    setupMaxRollingCalendar(myCalendar);
+    //alwayson for testing
+    setupDefaultUsers(myCalendar);
+    System.out.println(myCalendar.getMyUsers().toString());
+
     //show login options
     mainMenu();
   }
 
+  /**
+   * Displays the main menu which you can login,
+   * create new user, and save and exit with.
+   */
   public static void mainMenu() {
     int myChoice;
     System.out.println(WELCOME_MSG);
@@ -100,9 +124,7 @@ public class AuctionCentralMainView {
     } while (currentUser == null);
   }
 
-  /**
-   * Prints the menu for users.
-   */
+  /** Prints the menu for users. */
   private static void userMenu() {
     //ask user to choose an option
     //System.out.println(CHOOSE_OPTION_MSG);
@@ -118,6 +140,7 @@ public class AuctionCentralMainView {
     currentUser = null;
   }
 
+  /** Initializes a stored serialized database. */
   public static void initialize() {
     userInput = new Scanner(System.in);
     myCalendar = load(DATABASE_PATH);
@@ -126,10 +149,11 @@ public class AuctionCentralMainView {
     userTypeArray[0] = new ACEmployeeView();
     userTypeArray[1] = new NonProfitView();
     userTypeArray[2] = new BidderView();
-
-    System.out.println(myCalendar.getMyUsers().toString());
   }
 
+  /**
+   * Prompts the user to login.
+   */
   public static void userLogin() {
     System.out.print(GET_USERNAME_MSG);
 
@@ -143,6 +167,9 @@ public class AuctionCentralMainView {
     }
   }
 
+  /**
+   * Create new user prompts.
+   */
   public static void createNewUser() {
     User newUser = null;
 
@@ -182,6 +209,9 @@ public class AuctionCentralMainView {
     }
   }
 
+  /**
+   * Prompts for a user type.
+   */
   private static int getUserType() {
 
     System.out.println(USER_TYPE_PROMPT_MESSAGE);
@@ -190,6 +220,11 @@ public class AuctionCentralMainView {
     return userInput.nextInt();
   }
 
+  /**
+   * Prints a list as Options.
+   * @param theList The list to be printed.
+   * @param theLastOption The last option that they can select, usually back or cancel.
+   */
   public static void printOptionList(final Object[] theList, final String theLastOption) {
     int counter = 1;
     for (Object option : theList) {
@@ -199,6 +234,10 @@ public class AuctionCentralMainView {
     System.out.println("[" + counter + "] " + theLastOption);
   }
 
+  /**
+   * Prints Auction details.
+   * @param theAuction the auction to print the details of.
+   */
   public static void printAuctionDetails(Auction theAuction) {
     StringBuilder string = new StringBuilder("Details for " + theAuction.getMyName());
     string.append("\n");
@@ -232,6 +271,11 @@ public class AuctionCentralMainView {
     System.out.println(string);
   }
 
+  /**
+   * Loads an AuctionCalendar from the database.
+   * @param thePath the path to the database
+   * @return the loaded AuctionCalendar
+   */
   public static AuctionCalendar load(final String thePath) {
     AuctionCalendar calendar = AuctionCalendar.load(thePath);
     if (calendar == null) {
@@ -240,12 +284,15 @@ public class AuctionCentralMainView {
       //setupUsers(myCalendar);
       System.out.println("Creating new ac file");
       //setup default users to login to if no file is found.
-      setupUsers(calendar);
     }
 
     return calendar;
   }
 
+  /**
+   * Saves a database.
+   * @param thePath
+   */
   private static void save(final String thePath) {
     try {
       myCalendar.save(thePath);
@@ -256,20 +303,33 @@ public class AuctionCentralMainView {
     System.out.println("Saving...");
   }
 
-  private static void setupUsers(AuctionCalendar theCalendar) {
+  private static void setupDefaultUsers(AuctionCalendar theCalendar) {
     User newACEmployee = new User("ACETester", 1);
     User newBidder = new User("BidderTester", 3);
     NonProfit newNPO = new NonProfit("NPOTest", "Test Organization");
     NonProfit newNPO2 = new NonProfit("NPOTest2", "Second Organization");
 
-
-
-    theCalendar.getMyUsers().put(newACEmployee.getUsername().toLowerCase(), newACEmployee);
+    theCalendar.addUser(newACEmployee);
     theCalendar.getMyUsers().put(newBidder.getUsername().toLowerCase(), newBidder);
     theCalendar.getMyUsers().put(newNPO.getUsername().toLowerCase(),newNPO);
     theCalendar.getMyUsers().put(newNPO2.getUsername().toLowerCase(),newNPO2);
 
 
+  }
 
+  private static void setupMaxAuctionsCalendar(AuctionCalendar theCalendar) {
+    for (int i = 1; i < 51; i+=2) {
+      String npoName = "npoTest" + i;
+      String orgName = "Test Org " + i;
+      theCalendar.addAuction(new Auction(new NonProfit(npoName, orgName), LocalDateTime.now().plusDays(i)));
+    }
+  }
+
+  private static void setupMaxRollingCalendar(AuctionCalendar theCalendar) {
+    theCalendar.addAuction(new Auction(new NonProfit("NPOTest1", "NPOTestOrg1"), LocalDateTime.now().plusDays(1).plusHours(5)));
+    theCalendar.addAuction(new Auction(new NonProfit("NPOTest1", "NPOTestOrg1"), LocalDateTime.now().plusDays(1).plusHours(10)));
+    theCalendar.addAuction(new Auction(new NonProfit("NPOTest1", "NPOTestOrg1"), LocalDateTime.now().plusDays(2).plusHours(5)));
+    theCalendar.addAuction(new Auction(new NonProfit("NPOTest1", "NPOTestOrg1"), LocalDateTime.now().plusDays(2).plusHours(10)));
+    theCalendar.addAuction(new Auction(new NonProfit("NPOTest1", "NPOTestOrg1"), LocalDateTime.now().plusDays(3).plusHours(5)));
   }
 }

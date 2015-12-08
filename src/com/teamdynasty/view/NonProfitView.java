@@ -39,7 +39,9 @@ public class NonProfitView implements IUserView {
 
   public static final String MAX_AUCTIONS_PER_DAY_MSG = "There are too many auctions already scheduled for that day.";
 
-  private static final String START_TOO_SOON_MSG = "The start date of your auction is too close to the end time of another.";
+  private static final String START_TOO_SOON_MSG = "The start time of one auction may be no earlier\nthan 2 hours after the end of the first.";
+
+  private static final String MAX_PER_YEAR_MSG = "You may only have one Auction in a year.";
 
   /*****************************************
    * EndS Business rule violation messages.*
@@ -98,9 +100,9 @@ public class NonProfitView implements IUserView {
       } else if (theCalendar.maxAuctionsInOneDay(userAuction)) {
         System.out.println(MAX_AUCTIONS_PER_DAY_MSG);
       } else if (theCalendar.auctionTooClose(userAuction)) {
-        System.out.println("The start time of one auction may be no earlier\nthan 2 hours after the end of the first.");
+        System.out.println(START_TOO_SOON_MSG);
       } else if (theUser.maxAuctionsPerYear()) {
-        System.out.println("You may only have one Auction in a year.");
+        System.out.println(MAX_PER_YEAR_MSG);
       } else {
         theCalendar.addAuction(theUser.scheduleAuction());
         System.out.println("Auction Scheduled.");
