@@ -26,6 +26,10 @@ public class Auction implements Comparable<Auction>, Serializable {
     this(theOwner, theStartDate, theEndDate, new ArrayList<>());
   }
 
+  public Auction(NonProfit theOwner, LocalDateTime theStartDate) {
+    this(theOwner, theStartDate, theStartDate.plusHours(1), new ArrayList<>());
+  }
+
   public Auction(NonProfit theOwner) {
     this(theOwner, null, null);
   }

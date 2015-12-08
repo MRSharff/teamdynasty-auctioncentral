@@ -161,7 +161,7 @@ public class AuctionCentralMainView {
           System.out.println(ENTER_NP_MSG);
           userInput.nextLine();
           String npoName = userInput.nextLine();
-          newUser = new NonProfit(userName, userType, npoName);
+          newUser = new NonProfit(userName, npoName);
         } else {
           newUser = new User(userName, userType);
         }
@@ -257,8 +257,8 @@ public class AuctionCentralMainView {
   private static void setupUsers(AuctionCalendar theCalendar) {
     User newACEmployee = new User("ACETester", 1);
     User newBidder = new User("BidderTester", 3);
-    NonProfit newNPO = new NonProfit("NPOTest", 2, "Test Organization");
-    NonProfit newNPO2 = new NonProfit("NPOTest2", 2, "Second Organization");
+    NonProfit newNPO = new NonProfit("NPOTest", "Test Organization");
+    NonProfit newNPO2 = new NonProfit("NPOTest2", "Second Organization");
 
 
 

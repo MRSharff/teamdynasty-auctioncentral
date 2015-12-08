@@ -8,13 +8,14 @@ import java.util.List;
  */
 public class NonProfit extends User {
 
+
   private boolean isScheduled;
   private String myOrgName;
   private Auction myAuction;
   private List<Item> myInventory;
 
-  public NonProfit(final String theUsername, final int theUserType, final String theOrgName) {
-    super(theUsername, theUserType);
+  public NonProfit(final String theUsername, final String theOrgName) {
+    super(theUsername, User.INPO);
     myOrgName = theOrgName;
     myAuction = null;
     myInventory = new ArrayList<>();

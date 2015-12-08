@@ -33,6 +33,7 @@ public class AuctionCalendar implements Serializable {
   private static final int MAX_ROLLING_AUCTIONS = 5;
   private static final int MAX_ROLLING_DAYS = 7;
   private static final int MINIMUM_HOURS_BETWEEN = 2;
+  private static final int MAX_AUCTIONS_ONE_DAY = 2;
   private static final long HOUR_OFFSET = 1;
 
   private HashMap<Integer, List<Auction>> myAuctions;
@@ -109,9 +110,10 @@ public class AuctionCalendar implements Serializable {
    * and in the day before adding it to the auction calendar.
    *
    * @param theAuction the details of the auction to be added to the auction calendar.
+   * @return returns true when the auction was added successfully.
    * @see Auction
    */
-  public void addAuction(final Auction theAuction) {
+  public boolean addAuction(final Auction theAuction) {
 
     if (!myAuctions.containsKey(theAuction.getStartDate().getMonthValue())) {
       ArrayList<Auction> newList = new ArrayList<>();
@@ -141,6 +143,7 @@ public class AuctionCalendar implements Serializable {
       myAuctions.get(theAuction.getStartDate().getMonthValue()).add(theAuction);
       //.out.println(theAuction.getMyName() + " scheduled for " + theAuction.getStartDate().getHour() + ":" + theAuction.getStartDate().getMinute());
     }
+    return bRPass;
   }
 
   /**
@@ -189,6 +192,18 @@ public class AuctionCalendar implements Serializable {
   }
 
   /**
+   * Checks if the calendar has an auction.
+   * @param theAuction the auction that the calendar checks if it has.
+   * @return true if the calendar has theAuction
+   */
+  public boolean hasAuction(final Auction theAuction) {
+    if (myAuctions.containsKey(theAuction.getStartDate().getMonthValue())) {
+      return myAuctions.get(theAuction.getStartDate().getMonthValue()).contains(theAuction);
+    }
+    return false;
+  }
+
+  /**
    * Business Rule 1 : No more than 25 auctions may be scheduled into the future.
    * <p>
    * Checks the maximum limit on the future auctions.
@@ -196,7 +211,7 @@ public class AuctionCalendar implements Serializable {
    * @return <code>true</code> if the maximum future auction limit has been breached;
    * <code>false</code> otherwise.
    */
-  private boolean hasMaxAuctions() {
+  public boolean hasMaxAuctions() {
     int auctionCount = 0;
     for (Integer key : myAuctions.keySet()) {
       auctionCount += myAuctions.get(key).size();
@@ -214,7 +229,7 @@ public class AuctionCalendar implements Serializable {
    * <code>false</code> otherwise.
    * @see Auction
    */
-  private boolean isWithinMaxDaysOut(final Auction theAuction) {
+  public boolean isWithinMaxDaysOut(final Auction theAuction) {
     /*
 		returns the auctions date minus the max days out (90 in tcss 360 case) and checks if it's after
 		the current date
@@ -233,17 +248,22 @@ public class AuctionCalendar implements Serializable {
    * has been breached; <code>false</code> otherwise.
    * @see Auction
    */
-  private boolean maxInRollingPeriod(final Auction otherAuction) {
+  public boolean maxInRollingPeriod(final Auction otherAuction) {
     int count = 0;
     for (Integer key : myAuctions.keySet()) {
       for (Auction auction : myAuctions.get(key)) {
-        if (auction.getStartDate().minusDays(MAX_ROLLING_DAYS).isBefore(otherAuction.getEndDate())
-                || auction.getEndDate().plusDays(MAX_ROLLING_DAYS).isAfter(otherAuction.getStartDate())) {
+//        if (auction.getStartDate().plusDays(MAX_ROLLING_DAYS).isAfter(otherAuction.getEndDate())
+//                || auction.getEndDate().plusDays(MAX_ROLLING_DAYS).isAfter(otherAuction.getStartDate())
+//                || auction.getStartDate().minusDays(MAX_ROLLING_DAYS).isBefore(otherAuction.getStartDate())
+//                || auction.getEndDate().minusDays(MAX_ROLLING_DAYS).isBefore(otherAuction.getEndDate())) {
+        if ((auction.getEndDate().plusDays(MAX_ROLLING_DAYS).isAfter(otherAuction.getStartDate())
+                && auction.getStartDate().isBefore(otherAuction.getStartDate()))
+        || (auction.getStartDate().minusDays(MAX_ROLLING_DAYS).isBefore(otherAuction.getEndDate())
+                && auction.getStartDate().isAfter(otherAuction.getStartDate()))) {
           count++;
         }
       }
     }
-
     return (count >= MAX_ROLLING_AUCTIONS);
   }
 
@@ -257,7 +277,7 @@ public class AuctionCalendar implements Serializable {
    * <code>false</code> otherwise.
    * @see Auction
    */
-  private boolean maxAuctionsInOneDay(final Auction otherAuction) {
+  public boolean maxAuctionsInOneDay(final Auction otherAuction) {
     int count = 0;
     for (Auction auction : myAuctions.get(otherAuction.getStartDate().getMonthValue())) {
       if (auction.getStartDate().getDayOfMonth() == otherAuction.getStartDate().getDayOfMonth()) {
@@ -267,7 +287,7 @@ public class AuctionCalendar implements Serializable {
         }
       }
     }
-    return (count > 1);
+    return (count >= MAX_AUCTIONS_ONE_DAY);
   }
 
   /**
@@ -283,9 +303,14 @@ public class AuctionCalendar implements Serializable {
    * <code>false</code> otherwise.
    * @see Auction
    */
-  private boolean auctionStartTooSoon(final Auction firstAuction, final Auction secondAuction) {
-    return (ChronoUnit.HOURS.between(firstAuction.getEndDate(), secondAuction.getStartDate()) < MINIMUM_HOURS_BETWEEN
-            || ChronoUnit.HOURS.between(secondAuction.getEndDate(), firstAuction.getStartDate()) < MINIMUM_HOURS_BETWEEN);
+  public boolean auctionStartTooSoon(final Auction firstAuction, final Auction secondAuction) {
+    boolean flag = true;
+    if (secondAuction.getStartDate().isAfter(firstAuction.getStartDate())) {
+      flag = ChronoUnit.HOURS.between(firstAuction.getEndDate(), secondAuction.getStartDate()) < MINIMUM_HOURS_BETWEEN;
+    } else {
+      flag = ChronoUnit.HOURS.between(secondAuction.getEndDate(), firstAuction.getStartDate()) < MINIMUM_HOURS_BETWEEN;
+    }
+  return flag;
   }
 
 
